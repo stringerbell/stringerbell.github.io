@@ -424,14 +424,14 @@ In the interest of brevity (ha!), I’ve omitted tests for the rest of this post
 
 Also, along with all of this, if you want to set up your very own slack slash command, go to `https://$slackInstance.slack.com/apps/manage/custom-integrations` Here’s a couple of screenshots of what my setup looks like.
 
-http://i.imgur.com/nQ4bRbl.png
+![]({{ "https://i.imgur.com/nQ4bRbl.png" }})
 
-http://i.imgur.com/46SOClF.png
+![]({{ "https://i.imgur.com/46SOClF.png" }})
 
 As a fun side note, if you don’t know about ngrok, you should be using it. It lets you send real traffic to your localhost, which comes in especially handy when testing stuff like this.
 
 More Packages, and a Parser
-Next, I added guzzle by running composer require guzzlehttp/guzzle changeset 04642f Guzzle is awesome, and will come in handy when we need to start making requests from our app. After that’s finished, I ran composer require zendframework/zend-console changeset bcea1d which is used below to parse incoming input from Slack.
+Next, I added guzzle by running `composer require guzzlehttp/guzzle` changeset 04642f Guzzle is awesome, and will come in handy when we need to start making requests from our app. After that’s finished, I ran `composer require zendframework/zend-console` changeset bcea1d which is used below to parse incoming input from Slack.
 
 We need something to parse the input incoming from slack. I initially made something that worked decently, but ultimately wound up with a more formal parser I found on stack overflow. changeset 2ebf40
 
@@ -455,20 +455,22 @@ class SlackClient
      }
  }
 {% endhighlight %}
-It follows the factory pattern in expressive, so we need to register it as such in dependencies.global.php
+It follows the factory pattern in expressive, so we need to register it as such in `dependencies.global.php`
 
 {% highlight php linenos %}
 
 'factories'  => [
 + SlackClient::class => SlackClient::class,
 {% endhighlight %}
-In SlackJiraPipeline.php, we’ll add our middleware that will handle and parse the input incoming from Slack.
+In `SlackJiraPipeline.php`, we’ll add our middleware that will handle and parse the input incoming from Slack.
 
+{% highlight diff%}
 $pipeline = new MiddlewarePipe();
 $pipeline->pipe($container->get(ValidateBody::class));
 $pipeline->pipe($container->get(ValidateSlackToken::class));
 +$pipeline->pipe($container->get(ParseSlackJiraInput::class));
-Here’s what ParseSlackJiraInput.php looks like
+{% endhighlight %}
+Here’s what `ParseSlackJiraInput.php` looks like
 {% highlight php linenos %}
 <?php
 
@@ -479,7 +481,7 @@ use GuzzleHttp\Client;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Console\Exception\RuntimeException;
 use Zend\Console\Getopt;
- use Zend\Stratigility\Http\ResponseInterface;
+use Zend\Stratigility\Http\ResponseInterface;
  
  class ParseSlackJiraInput
  {
@@ -537,22 +539,22 @@ use Zend\Console\Getopt;
      }
  }
 {% endhighlight %}
-It’s pretty simple. We’ll get the parsed (validated) body, and pull out the text portion, and hand it off to our parser. The parser will split each value into elements in an array, and then hand it back to Getopt, which is from Zend Console.
+It’s pretty simple. We’ll get the parsed (validated) body, and pull out the text portion, and hand it off to our parser. The parser will split each value into elements in an array, and then hand it back to `Getopt`, which is from Zend Console.
 
-This makes it easy to do stuff like $arg -o value, and then pull out the -o value by doing something like $result->o
+This makes it easy to do stuff like `$arg -o value`, and then pull out the `-o` value by doing something like `$result->o`
 
 The above parser only accepts one option -p(making the results public, meaning it’ll post publicly, or default to ‘ephemeral’, meaning only the user who ran the slash command can see the results) Using the above pattern makes it trivial to add more functionality and options.
 
-I’ve found it helpful while building slash commands to echo out the command the user put in. It makes it clearer to the user if something doesn’t work, and is handy for sharing. We’re checking to make sure the user has more than one argument in their command, (meaning they can’t successfully run something like /jira show) and if not, we’re posting back to the user in slack the usage.
+I’ve found it helpful while building slash commands to echo out the command the user put in. It makes it clearer to the user if something doesn’t work, and is handy for sharing. We’re checking to make sure the user has more than one argument in their command, (meaning they can’t successfully run something like `/jira show`) and if not, we’re posting back to the user in slack the usage.
 
-Another benefit of doing it this way is so when new functionality gets added, or if someone is unfamiliar with options in this slash command, they can run /jira and get back usage info.
+Another benefit of doing it this way is so when new functionality gets added, or if someone is unfamiliar with options in this slash command, they can run `/jira` and get back usage info.
 
-If you notice on line 64, we’re calling $next with $request->withParsedBody($body). This is so we can pass things into the request and use them later on.
+If you notice on line 64, we’re calling $next with `$request->withParsedBody($body)`. This is so we can pass things into the request and use them later on.
 
-Making a request to JIRA
+# **Making a request to JIRA**
 changeset 739757
 
-Now we’re finally at a point that we can query the JIRA API, and show an issue. Here’s what the relevant parts of JiraShowIssueCommand.php look like:
+Now we’re finally at a point that we can query the JIRA API, and show an issue. Here’s what the relevant parts of `JiraShowIssueCommand.php` look like:
 
 {% highlight php linenos %}
 <?php
@@ -624,17 +626,17 @@ use Psr\Http\Message\ServerRequestInterface;
      }
  }
 {% endhighlight %}
-First, on line 30, we’re checking to make sure we’re looking at a request that looks something like /jira show $ISSUE-KEY Then, we’re saving the rest of the arguments in the request body for our request to JIRA later on.
+First, on line 30, we’re checking to make sure we’re looking at a request that looks something like `/jira show $ISSUE-KEY` Then, we’re saving the rest of the arguments in the request body for our request to JIRA later on.
 
-The UriTemplate on line 34 from Guzzle makes it trivial to build a url dynamically using whatever data you need.
+The `UriTemplate` on line 34 from Guzzle makes it trivial to build a url dynamically using whatever data you need.
 
-The request we’re making will use JIRA’s JQL to request whatever issues we’re asking for by sticking them in jql=key in ({issueKeys*}). The rest of the query are the fields we care about. If there are multiple issues passed in, the template will automatically split them up using a comma, which is just what we need.
+The request we’re making will use JIRA’s JQL to request whatever issues we’re asking for by sticking them in `jql=key in ({issueKeys*})`. The rest of the query are the fields we care about. If there are multiple issues passed in, the template will automatically split them up using a comma, which is just what we need.
 
-After we have our uri built, we make a GET request using our JIRA client. That will return JSON data, which we hand into a function that formats our message in a format for slack to make it pretty. You can see that bit of code here.
+After we have our uri built, we make a `GET` request using our JIRA client. That will return JSON data, which we hand into a function that formats our message in a format for slack to make it pretty. You can see that bit of code here.
 
 Guzzle will throw an exception if an invalid HTTP response or any other type of error happens. If that’s the case, we’re using our Slack client to send the error back to the user.
 
-The factory for the above class looks like this JiraShowIssueCommandFactory.php:
+The factory for the above class looks like this `JiraShowIssueCommandFactory.php`:
 {% highlight php linenos %}
 <?php
 
@@ -688,7 +690,7 @@ class JiraClient
 {% endhighlight %}
 The main difference is that we know the base_uri for our JIRA instance, so we’ll construct it with that and we need to make requests using basic auth.
 
-The config file that’s driving the factory above looks like this (jira_config.local.php.dist):
+The config file that’s driving the factory above looks like this (`jira_config.local.php.dist`):
 {% highlight php linenos %}
 <?php
 
@@ -699,20 +701,22 @@ return [
     ],
 ];
 {% endhighlight %}
-It’s a dist file since it has our JIRA credentials in it. In production and locally, you should have a copy of this file with your real username and password to be able to make it work.
+It’s a `dist` file since it has our JIRA credentials in it. In production and locally, you should have a copy of this file with your real username and password to be able to make it work.
 
 After all of these are created, be sure to add them to your dependencies config file. Expressive will throw a nice error back at you if you forget though.
 
-Final Steps
+# **Final Steps**
 We now have a working stack of middleware that receives, validates, and makes a query to JIRA.
 
-Here’s a screenshot of an example result: Result
+Here’s a screenshot of an example result: 
+
+![]({{ "http://i.imgur.com/j2kJsB0.png" }})
 
 The last piece I added was to send a message back to the user on Slack when we’re done processing JIRA commands. changeset 4c8ceb
 
 A handy thing you can do with Zend’s Service Manager is call build instead of get, with config options. Here’s what we’re adding to our pipeline.
 
-{% highlight php linenos %}
+{% highlight diff %}
 
 class SlackJiraPipeline
  {
@@ -723,9 +727,9 @@ class SlackJiraPipeline
          $pipeline->pipe($container->get(ValidateSlackToken::class));
          $pipeline->pipe($container->get(ParseSlackJiraInput::class));
          $pipeline->pipe($container->get(JiraShowIssueCommand::class));
-+ $pipeline->pipe(
-+ $container->build(SendMessageToSlackUserViaResponseUrl::class, ['message' => 'Processing Complete'])
-+ );
++        $pipeline->pipe(
++          $container->build(SendMessageToSlackUserViaResponseUrl::class, ['message' => 'Processing Complete'])
++        );
 {% endhighlight %}
 Here’s the corresponding middleware:
 
@@ -768,7 +772,7 @@ class SendMessageToSlackUserViaResponseUrl
      }
 }
 {% endhighlight %}
-This takes in a Slack Client, and a message, and then uses that message to send to Slack via the response_url in the body.
+This takes in a Slack Client, and a message, and then uses that message to send to Slack via the `response_url` in the body.
 
 Here’s the factory:
 
@@ -797,9 +801,9 @@ class SendMessageToSlackUserViaResponseUrlFactory
 {% endhighlight %}
 Expressive will take in options that you pass to it at runtime. We set up a default message, and then pass it along to our middleware.
 
-Here’s a screenshot of the result using the complete message at the end. We’re also passing in the -p option to post the result publicly.
+Here’s a screenshot of the result using the complete message at the end. We’re also passing in the `-p` option to post the result publicly.
 
-Slack Example
+![Slack Example]({{"http://i.imgur.com/0FPUluV.png"}})
 
 That’s it! Hopefully you now have a good overview of how to connect Slack to JIRA, and potentially any other service using expressive.
 
