@@ -1,0 +1,127 @@
+{
+  "basics": {
+    "name": "Dann Stockton",
+    "label": "Software Engineer",
+    "picture": "",
+    "email": "dann@dannstockton.com",
+    "phone": "Upon Request",
+    "website": "http://dannstockton.com",
+    "summary": "6 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses. Team player that works best in collaborative environments. Excited about solving hard problems that have real world uses. Future oriented. Big-picture person with a focus on important details (like customer experience/service). Able to bridge the gap to communicate technical ideas into layman’s terms. Passionate about the web and mobile."
+  },
+  "work": [
+    {
+      "company": "i3logix",
+      "position": "Sr. Software Engineer",
+      "website": "http://ballottrax.com",
+      "startDate": "2016-01-04",
+      "summary": "Mail-in ballot tracking",
+      "highlights": [
+        "Started out as a 'Software Developer', received promotion after six months to 'Software Engineer'. Received another promotion to 'Senior Software Engineer'.",
+        "Led the project to build a native iOS app https://itunes.apple.com/us/app/ballottrax/id1214500178?mt=8 (Swift 3, 4, a little bit of React Native)",
+        "Reduced complexity of UI by implementing a FSM",
+        "Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals",
+        "Led the project to automate tedious developer workflows, implement various business processes, and connect various services together using Slack as a CLI. (Like an internal IFTTT)",
+        "Developed custom 30+ Slack slash commands: /auto_merge, /whynotmerge, /rebase, /mailgun, /twilio, /chipotle, /jenkins, /jira, /scrum",
+        "Rebase button workflow example: http://i.imgur.com/kamcLt2.png",
+        "`Why Not Merge` example: https://i.imgur.com/OUsUgbv.png"
+      ]
+    },
+    {
+      "company": "Subsplash",
+      "position": "Web Developer",
+      "website": "https://subsplash.com",
+      "startDate": "2014-02-01",
+      "endDate": "2016-01-01",
+      "summary": "Turnkey apps/content management for churches & non-profits",
+      "highlights": [
+        "Led the effort to migrate payment processing to Stripe, implemented and automated a customer sign-up/account creation/follow-up process using webhooks, along with analytics, reporting, and data processing for the finance team",
+        "Automated front-end process improvements by creating gulp.js build scripts (semantic sprites, LESS/CSS/JS minification, image optimization, live reload)",
+        "Parallelized push notification work using async workers/DB queues",
+        "Built API to enable podcasting",
+        "Built a custom RSS/Atom parser for a \"reader\" project",
+        "Helped build \"web player\" product from the ground up, implemented \"auto-resume\" feature",
+        "Overhauled legacy iCal parser, implemented sabre-vobject library",
+        "Used imagick library to automate image processing/manipulation (primary color, image montage, promo widget)"
+      ]
+    },
+    {
+      "company": "Kicksender",
+      "position": "Founder",
+      "startDate": "2013-08-01",
+      "endDate": "2014-08-01",
+      "summary": "Digital Order Fulfillment for artists after their kickstarter project ends",
+      "highlights": [
+        "Built it to offer digital fulfillment for crowd-funded projects, automating the pain of sending out lots of digital assets to lots of people reliably with a full set of features",
+        "Built in Zend Framework 1 using PHP5-FPM 5.5, MySQL, HTML5, JS, AJAX, ZMQ, Vagrant, Nginx, Ubuntu"
+      ]
+    },
+    {
+      "company": "Tifah LLC",
+      "position": "Co-Founder",
+      "startDate": "2005-03-01",
+      "endDate": "2013-08-01",
+      "summary": "Touring Musician",
+      "highlights": [
+        "Implemented, managed, maintained Website/Marketing/Content Strategy",
+        "Helped grow our email list from 0-60,000 with various marketing strategies",
+        "Launched, built and maintained the system and server to facilitate giving away 226K albums in a the span of a month (March, 2013)",
+        "Built automated incentive system for users to tweet/like/send an email in exchange for a download",
+        "Built logistical tool for tour management and ticket sales",
+        "Built complete ticketing system, and date/show manager on top of Google Calendar and Stripe",
+        "Built internal CRM tools to improve customer experience"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Web Development",
+      "keywords": [
+        "PHP",
+        "PHPUnit",
+        "PHPSpec",
+        "Behat/Gherkin",
+        "ZF 1, 2, 3",
+        "Expressive 1, 2",
+        "Swift",
+        "Javascript",
+        "React",
+        "Redux",
+        "Statecharts",
+        "Jest",
+        "Ruby",
+        "RSpec",
+        "Watir",
+        "CSS",
+        "Jekyll",
+        "Gulp",
+        "Git",
+        "Mercurial",
+        "Composer",
+        "Nginx",
+        "Apache",
+        "Vagrant",
+        "RabbitMQ"
+      ]
+    },
+    {
+      "name": "APIs",
+      "keywords": [
+        "Slack",
+        "Twilio",
+        "Mailgun",
+        "Amazon Web Services",
+        "Stripe",
+        "Twitter",
+        "Facebook",
+        "Bitbucket",
+        "Jira",
+        "Github",
+        "Zendesk",
+        "ZMQ",
+        "Google Calendar",
+        "RabbitMQ",
+        "Mandrill"
+      ]
+    }
+  ]
+}
