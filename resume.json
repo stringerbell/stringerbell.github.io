@@ -24,6 +24,7 @@
       "summary": "Mail-in ballot tracking, developer workflow automation.",
       "highlights": [
         "• Started out as a 'Software Developer', received promotion after six months to 'Software Engineer'. Received another promotion to 'Senior Software Engineer'.",
+        "• Led three engineers for ballottrax",
         "• Led the project to build a native iOS app https://itunes.apple.com/us/app/ballottrax/id1214500178?mt=8 (Swift 3, 4, a little bit of React Native)",
         "• Reduced complexity of UI by implementing a FSM",
         "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals",
