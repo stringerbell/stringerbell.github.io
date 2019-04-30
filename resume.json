@@ -6,7 +6,14 @@
     "email": "dann@dannstockton.com",
     "phone": "Upon Request",
     "website": "https://dannstockton.com",
-    "summary": "6 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses. Team player that works best in collaborative environments. Excited about solving hard problems that have real world uses. Future oriented. Big-picture person with a focus on important details (like customer experience/service). Able to bridge the gap to communicate technical ideas into layman’s terms. Passionate about the web and mobile."
+    "summary": "6 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses. Team player that works best in collaborative environments. Excited about solving hard problems that have real world uses. Future oriented. Big-picture person with a focus on important details (like customer experience/service). Able to bridge the gap to communicate technical ideas into layman’s terms. Passionate about the web and mobile.",
+    "profiles": [
+      {
+        "network": "github",
+        "url": "https://github.com/stringerbell",
+        "username": "stringerbell"
+      }
+    ]
   },
   "work": [
     {
