@@ -125,5 +125,14 @@
         "Jenkins"
       ]
     }
+  ],
+  "publications": [
+    {
+      "name": "99 Bottles of OOP (PHP Version)",
+      "publisher": "https://www.sandimetz.com/99bottles",
+      "summary": "99 Bottles of OOP is a practical guide to writing cost-effective, maintainable, and pleasing object-oriented code.",
+      "url": "https://sandimetz.dpdcart.com/",
+      "releaseDate": "2019-01-01"
+    }
   ]
 }
