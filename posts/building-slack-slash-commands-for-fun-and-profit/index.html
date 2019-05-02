@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='I’ve been recently learning about and using expressive, a microframework made in PHP that uses PSR-7.
+In this post, I’d like to walk through how I made the /jira Slack slash command at my job. If you want to follow along, you can check out the repo here, and then run composer install to get all the dependencies installed. Also, I’m using PHP 7, so be sure to have that running if you’d like to run these examples.'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Building Slack Slash Commands For Fun And Profit • Dann Stockton'>
+<meta property='og:description' content='I’ve been recently learning about and using expressive, a microframework made in PHP that uses PSR-7.
+In this post, I’d like to walk through how I made the /jira Slack slash command at my job. If you want to follow along, you can check out the repo here, and then run composer install to get all the dependencies installed. Also, I’m using PHP 7, so be sure to have that running if you’d like to run these examples.'>
+<meta property='og:url' content='https://dannstockton.com/posts/building-slack-slash-commands-for-fun-and-profit/'>
+<meta property='og:site_name' content='Dann Stockton'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:published_time' content='2016-05-30T00:00:00Z'/><meta property='article:modified_time' content='2016-05-30T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.55.3" />
+
+  <title>Building Slack Slash Commands For Fun And Profit • Dann Stockton</title>
+  <link rel='canonical' href='https://dannstockton.com/posts/building-slack-slash-commands-for-fun-and-profit/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.d751652e.css'><link rel='stylesheet' href='/css/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+  
+
+</head>
+<body class='page type-posts has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.png'>
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+      <a href='/'>
+      Dann Stockton
+      </a>
+    </h2>
+    <div class='desc'>
+    
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+    <ul><li>
+        <a href='https://github.com/stringerbell' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:dannstockton%20at%20the%20google%20owned%20e-mail%20site' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section></div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Skip to Content</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Toggle Sidebar</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/about/'>About</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Dann Stockton</p><p class='desc site-desc'></p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Building Slack Slash Commands For Fun And Profit</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2016-05-30T00:00:00Z'>May 30, 2016</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+22 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class='container entry-content'>
+  
+
+<p>I’ve been recently learning about and using <a href="https://docs.zendframework.com/zend-expressive/">expressive</a>, a microframework made in PHP that uses <a href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-7-http-message.md">PSR-7</a>.</p>
+
+<p>In this post, I’d like to walk through how I made the <code>/jira</code> Slack slash command at my job. If you want to follow along, you can <a href="https://github.com/stringerbell/expressive-demo-jira-slack">check out the repo here</a>, and then run <code>composer install</code> to get all the dependencies installed. Also, I’m using PHP 7, so be sure to have that running if you’d like to run these examples. Mainly, I’m using the ultra awesome <code>??</code> null coalesce operator, which makes so many things so much easier and cleaner and more fun to write. <a href="https://wiki.php.net/rfc/isset_ternary">Read up on it here if you don’t know about it already.</a></p>
+
+<p>It’s been a lot of fun to make some tools for my team to help improve their workflows, and automate a lot of tedious tasks using it.</p>
+
+<p>If you’re not already familiar with Slack slash commands, here’s how they work:</p>
+
+<p>You run <code>/$command [ args ]</code>, inside of Slack and Slack will send a request to an endpoint of your choosing, and you can respond, and do whatever work you need.</p>
+
+<p>Here’s a partial list of what I’ve been able to make using slash commands.</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"> /jenkins [run] [jobName] [ options ]
+ -p|--public publicly post option
+ -s|--status get job statuses
+ -l|--last &lt;integer&gt; get last n jobs
+ -f|--filter &lt;string&gt; regex filter jobs
+</code></pre></div>
+For <code>/jenkins</code>, it’s really handy to be able to see the status of the last $n jobs, or kick off a particular job. It’s also really handy to do this while eating lunch, or wherever you find yourself away from your terminal and/or not connected to your VPN that can talk to <a href="https://jenkins.io/">Jenkins</a>.</p>
+
+<p><code>/rebase [featureBranch] [repo]</code></p>
+
+<p><code>/rebase</code> is used in our current workflow to rebase your work on top of master. For us, we like to have our Pull Requests exactly 1 commit ahead, and 0 behind <code>master</code>, so when we’re ready to merge, our history looks nice and tidy, and <code>git bisect</code> is easy to use. Having this in Slack might seem like overkill, but it’s particularly awesome when:</p>
+
+<ul>
+<li>You’re in the middle of something else, and your PR is ready to be merged.</li>
+<li>There’s a one or more PR’s ahead of yours, and after merging them (we use the <code>--no-ff</code> option), your PR is behind.
+We also have an endpoint set up that notifies the author on Slack when their PR has enough peer reviewed approvals, but isn’t 1 commit ahead and 0 behind. Slack will include the <code>/rebase</code> command right in the message so the author is able to copy paste the command right back into Slack and everything gets taken care of automagically. Boom. Hooray automation!</li>
+</ul>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"> /mailgun [sync|add|get|forward] [ options ]
+ -p|--public publicly post option
+ -v|--valid? check to see if mailgun has valid records when using `get` command
+ -f|--from &lt;string&gt; from address when using `forward` command
+ -t|--to &lt;string&gt; to address when using `forward` command
+ -l|--list list routes for `forward` command
+ --filter &lt;string&gt; regex filter for routes when using `forward` command
+</code></pre></div>
+<code>/mailgun</code> makes calls using the mailgun API. It’s pretty self explanatory, but being able to do things without logging into mailgun is a productivity booster.</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"> /twilio accountname search|show_errors sms|voice [ options ]
+ -p|--public publicly post option
+ -f|--from &lt;string&gt; filter by from number when using `search`
+ -t|--to &lt;string&gt; filter by to number when using `search`
+ --sid &lt;string&gt; filter by SID when using `search`
+ --status &lt;string&gt; filter by call status for `voice` when using `search`
+ -s|--start &lt;string&gt; filter by voice|sms started after midnight on a date
+ -e|--end &lt;string&gt; filter by voice|sms started before midnight on a date
+ -c|--code &lt;string&gt; search for error code(s) (separated by spaces) when using `show_errors`
+ --error &lt;string&gt; regex search for twilio error message `show_errors`
+ -l|--limit &lt;integer&gt; limit results when using `search` or `show_errors
+</code></pre></div>
+<code>/twilio</code> is useful for easily troubleshooting and querying twilio. Also super nice to not have to login and check on an error when you’re able to do it right from the comfort of Slack.</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"> /jira show issuesKey(s)[] [ options ]
+ -p|--public publicly post option
+</code></pre></div>
+<code>/jira</code> was made out of the idea that it’s really nice to be able to reference JIRA issues using their issue key in Slack without having to build or grab a link. It shows a nice summary, and can show multiple issues.</p>
+
+<p>In this post, I’ll be showing you how I made <code>/jira</code> using expressive, and PHP 7. You can check out the <a href="https://github.com/stringerbell/expressive-demo-jira-slack">repo here</a></p>
+
+<h1 id="set-up"><strong>Set up</strong></h1>
+
+<p>I’m using composer, so if you want to follow along, run <code>composer self-update</code> if you haven’t in a while. Then run <code>composer create-project zendframework/zend-expressive-skeleton $projectDir</code> where <code>$projectDir</code> is where you&rsquo;d like this project to live.</p>
+
+<p>The <a href="https://github.com/zendframework/zend-expressive-skeleton">Zend Expressive Skeleton</a> gives you a lot of things for free. It’s probably a bit overkill for what we need to do, but it makes things a little more magical (in a nice way), and gets you up and going really quickly, especially if you’re not already familiar with expressive.</p>
+
+<p>It gives you a CLI interface to pick which router, dependency injection container, templating engine, and error handler you want to use. One interesting thing about expressive is most things are swappable, so if you decide at some point you need or want a different way to route things, it’s relatively easy to drop something else in without too much pain.</p>
+
+<p>In my opinion, the biggest strength of expressive is through the convention of creating middleware pieces that look something like this:</p>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\MiddlewareExample</span>
+
+<span style="color:#75715e">/* use statements */</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MiddlewareExample</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ServerRequestInterface</span> $request, <span style="color:#a6e22e">ResponseInterface</span> $response, <span style="color:#a6e22e">callable</span> $next <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>)
+     {
+         <span style="color:#75715e">// do something interesting
+</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">return</span> $next($requst, $response, $error <span style="color:#f92672">??</span> <span style="color:#66d9ef">null</span>);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>The above way of doing things makes it possible to build really small bits of functionality that are really easy to reason about, and test. Building things in this way has felt like building with LEGOs, which is super fun.</p>
+
+<h1 id="config"><strong>Config</strong></h1>
+
+<p>Some of the boilerplate code is already in place for you when you use the skeleton. Some of the important bits are:</p>
+
+<ul>
+<li><code>/config/autoload/**</code> This is where your config files go. Expressive will autoload things for you in there, and you can fetch them like this: <code>$container-&gt;get('config');</code> Something that’s nice is that <code>*.local.php</code> is ignored by git, so it’s a good place to keep secrets, like tokens, and credentials, or local configuration that will override your <code>*.global.php</code> config files with the same name.
+In the <code>config/autoload</code> directory, you’ll find:</li>
+</ul>
+
+<p><code>routes.global.php</code> This is where you set up your application routes.
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<span style="color:#75715e">/* ... other config */</span> 
+<span style="color:#e6db74">&#39;routes&#39;</span> <span style="color:#f92672">=&gt;</span>
+    [
+        <span style="color:#e6db74">&#39;name&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;routeName&#39;</span>,
+        <span style="color:#e6db74">&#39;path&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;/path/you/care/about&#39;</span>,
+        <span style="color:#e6db74">&#39;middleware&#39;</span> <span style="color:#f92672">=&gt;</span> [<span style="color:#a6e22e">MiddlewareStack</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>], <span style="color:#75715e">// this can be a single item, or an array of middleware classes or a middleware pipelines
+</span><span style="color:#75715e"></span>        <span style="color:#e6db74">&#39;allowed_methods&#39;</span> <span style="color:#f92672">=&gt;</span> [<span style="color:#e6db74">&#39;GET&#39;</span>], <span style="color:#75715e">// HTTP methods you want to accept
+</span><span style="color:#75715e"></span>    ],
+</code></pre></td></tr></table>
+</div>
+</div>
+- <code>middleware-pipeline.global.php</code>
+Also an array of configuration. There are lots of comments in that file to help understand which section does what.</p>
+
+<ul>
+<li><code>dependencies.global.php</code>
+This is where you register your classes, and tell expressive if they need a factory or if they can be invoked without any dependencies.</li>
+</ul>
+
+<p>These commands are provided by using the skeleton app.</p>
+
+<ul>
+<li><code>composer cs</code> (phpcs)</li>
+<li><code>composer cs-fix</code> (phpcbf)</li>
+<li><code>composer test</code> (phpunit)</li>
+</ul>
+
+<h1 id="first-steps"><strong>First steps</strong></h1>
+
+<p>The first thing I did after setting up the skeleton is replace the <code>HomePageAction</code> <code>HTMLResponse</code> with a <code>JSONReponse</code> <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/6b21dd5c88c06a3f6eed5bf2cfcdacb8762e4b49">changeset 6b21dd here</a></p>
+
+<p>The reason you can get to it, and it works the way it does is because of <code>routes.global.php</code></p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#e6db74">&#39;routes&#39;</span> <span style="color:#f92672">=&gt;</span> [
+    [
+        <span style="color:#e6db74">&#39;name&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;home&#39;</span>,
+        <span style="color:#e6db74">&#39;path&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;/&#39;</span>,
+        <span style="color:#e6db74">&#39;middleware&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">App\Action\HomePageAction</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+        <span style="color:#e6db74">&#39;allowed_methods&#39;</span> <span style="color:#f92672">=&gt;</span> [<span style="color:#e6db74">&#39;GET&#39;</span>],
+    ],
+</code></pre></td></tr></table>
+</div>
+</div>
+The next thing I did was add a Slack Jira Pipeline. <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/cd6bda555a4546306bbc7754f0d3a8229799b811">changeset cd6bda</a> All you need is to add the route you want, and register it with expressive.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">// routes.global.php
+<span style="color:#a6e22e">+ [
+</span><span style="color:#a6e22e">+ &#39;name&#39; =&gt; &#39;/slack_jira&#39;,
+</span><span style="color:#a6e22e">+ &#39;path&#39; =&gt; &#39;/slack_jira&#39;,
+</span><span style="color:#a6e22e">+ &#39;middleware&#39; =&gt; [SlackJiraPipeline::class],
+</span><span style="color:#a6e22e">+ &#39;allowed_methods&#39; =&gt; [&#39;POST&#39;],
+</span><span style="color:#a6e22e">+ ],
+</span></code></pre></div>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">// dependencies.global.php
+
+&#39;factories&#39;  =&gt; [
+    Application::class       =&gt; ApplicationFactory::class,
+    Helper\UrlHelper::class  =&gt; Helper\UrlHelperFactory::class,
+<span style="color:#a6e22e">+ SlackJiraPipeline::class =&gt; SlackJiraPipeline::class,
+</span></code></pre></div>
+All that pipeline looks like is this:</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Pipeline</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Validator\ValidateBody</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Interop\Container\ContainerInterface</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Zend\Stratigility\MiddlewarePipe</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SlackJiraPipeline</span>
+ {
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ContainerInterface</span> $container)
+     {
+         $pipeline <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MiddlewarePipe</span>();
+         $pipeline<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">pipe</span>($container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">ValidateBody</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>));
+ 
+         <span style="color:#66d9ef">return</span> $pipeline;
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+That tells expressive to route through your pipeline in the order you define. Really straightforward so far. The only piece of middleware currently in this pipeline is one we’ll create called <code>ValidateBody</code>.</p>
+
+<p>All it does is make sure an incoming request with a body is valid. One bit of setup you have to do is add <code>BodyParamsMiddleware</code> to <code>middleware-pipeline.global.php</code>. This middleware comes with expressive, and allows you to call <code>$request-&gt;getParsedBody()</code>, and return an associative array with the body contents, which we’ll need for our <code>ValidateBody</code> middleware. You can also add strategies to this to parse your incoming bodies however makes the most sense for your application (strategies could be XML, or something else you&rsquo;re expecting to consume).</p>
+
+<p>Also, putting it in <code>middleware-pipeline.global.php</code> makes it always run this to make it available everywhere instead of having to make sure it’s on every middleware stack</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">&#39;routing&#39; =&gt; [
+             &#39;middleware&#39; =&gt; [
+                 ApplicationFactory::ROUTING_MIDDLEWARE,
+                 Helper\UrlHelperMiddleware::class,
+<span style="color:#a6e22e">+ Helper\BodyParams\BodyParamsMiddleware::class,
+</span></code></pre></div>
+Onto the middleware we want to build. Here’s all ValidateBody does:</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ValidateBody</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ServerRequestInterface</span> $request, <span style="color:#a6e22e">ResponseInterface</span> $response, <span style="color:#a6e22e">callable</span> $next)
+    {
+        $body <span style="color:#f92672">=</span> $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getParsedBody</span>();
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>$body) {
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">InvalidArgumentException</span>(<span style="color:#e6db74">&#34;Invalid Body&#34;</span>);
+        }
+        <span style="color:#66d9ef">return</span> $next($request, $response);
+    }
+}
+</code></pre></td></tr></table>
+</div>
+</div>
+It calls <code>$request-&gt;getParsedBody()</code>, and if it’s empty, we’ll throw. That’s it! This pattern is going to become very familiar.</p>
+
+<p>Throwing in a middleware will kick the request out to your error handler. That way we can cut the request short at any step if we don’t want to continue for whatever reason.</p>
+
+<p>After setting that class up, we’ll need to register it with expressive in <code>dependencies.global.php</code></p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">&#39;invokables&#39; =&gt; [
+             // Fully\Qualified\InterfaceName::class =&gt; Fully\Qualified\ClassName::class,
+             Helper\ServerUrlHelper::class =&gt; Helper\ServerUrlHelper::class,
+<span style="color:#a6e22e">+ ValidateBody::class =&gt; ValidateBody::class,
+</span></code></pre></td></tr></table>
+</div>
+</div>
+This tells expressive that when it’s autoloading it, since it’s in the invokables section that it can start using it right away without fetching any dependencies.</p>
+
+<h1 id="testing-middleware"><strong>Testing middleware</strong></h1>
+
+<p>To give you a basic example of how to write a middleware test, I went ahead and added a couple of tests in my tests directory for the Validate body middleware <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/f66c9e316f1069b16b0b866b44fbad28d9d3adf1">f66c9e changeset</a>. (also something expressive skeleton gets you set up with)</p>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">AppTest\Validator</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Validator\ValidateBody</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ServerRequestInterface</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Zend\Expressive\Container\Exception\InvalidArgumentException</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Zend\Stratigility\Http\ResponseInterface</span>;
+
+ <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ValidateBodyTest</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">\PHPUnit_Framework_TestCase</span>
+ {
+     <span style="color:#66d9ef">private</span> $validateBody;
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">setUp</span>()
+     {
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">validateBody</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ValidateBody</span>();
+     }
+ 
+     <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">      * @test
+</span><span style="color:#e6db74">      * * @expectedException InvalidArgumentException
+</span><span style="color:#e6db74">      */</span>
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">itWillThrowAnExceptionWhenBodyIsInvalid</span>()
+     {
+         <span style="color:#e6db74">/** @var ServerRequestInterface $request */</span>
+         $request <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">prophesize</span>(<span style="color:#a6e22e">ServerRequestInterface</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+         <span style="color:#e6db74">/** @var ResponseInterface $response */</span>
+         $response <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">prophesize</span>(<span style="color:#a6e22e">ResponseInterface</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+         $next     <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> ($request, $response) {
+             <span style="color:#66d9ef">return</span> $response;
+         };
+         $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getParsedBody</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">shouldBeCalled</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">willReturn</span>([]);
+         $result   <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">validateBody</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">__invoke</span>($request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">reveal</span>(), $response<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">reveal</span>(), $next);
+     }
+ 
+     <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">      * @test
+</span><span style="color:#e6db74">      */</span>
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">itWillNotThrowAnExceptionForValidBody</span>()
+     {
+         <span style="color:#e6db74">/** @var ServerRequestInterface $request */</span>
+         $request <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">prophesize</span>(<span style="color:#a6e22e">ServerRequestInterface</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+         <span style="color:#e6db74">/** @var ResponseInterface $response */</span>
+         $response <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">prophesize</span>(<span style="color:#a6e22e">ResponseInterface</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+         $next     <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> ($request, $response) {
+             <span style="color:#66d9ef">return</span> $response;
+         };
+         $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getParsedBody</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">shouldBeCalled</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">willReturn</span>([<span style="color:#e6db74">&#34;foo&#34;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;bar&#34;</span>]);
+         $result <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">validateBody</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">__invoke</span>($request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">reveal</span>(), $response<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">reveal</span>(), $next);
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">assertInstanceOf</span>(<span style="color:#a6e22e">ResponseInterface</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>, $result);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>We’re testing both code paths. A request with a invalid body, and one with a valid body.</p>
+
+<h1 id="next-steps"><strong>Next Steps</strong></h1>
+
+<p>We’re going to want to validate the incoming request is actually coming from Slack. We’ll do this by building a middleware piece that checks the request body’s token. <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/68f455995850b7afd6456b0245a1aed46aadf9aa">68f455 changeset</a></p>
+
+<p>In <code>SlackJiraPipeline.php</code>, we add our Slack Validate token middleware after the ValidateBody middleware</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">{
+         $pipeline = new MiddlewarePipe();
+         $pipeline-&gt;pipe($container-&gt;get(ValidateBody::class));
+<span style="color:#a6e22e">+ $pipeline-&gt;pipe($container-&gt;get(ValidateSlackToken::class));
+</span><span style="color:#a6e22e"></span> 
+         return $pipeline;
+ }    
+</code></pre></div><br />
+Here’s <code>ValidateSlackToken.php</code></p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Validator\Slack</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ResponseInterface</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ServerRequestInterface</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Zend\Expressive\Container\Exception\InvalidArgumentException</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ValidateSlackToken</span>
+ {
+     <span style="color:#e6db74">/** * @var array */</span>
+     <span style="color:#66d9ef">private</span> $validTokens;
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct(<span style="color:#66d9ef">array</span> $validTokens)
+     {
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">validTokens</span> <span style="color:#f92672">=</span> $validTokens;
+     }
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ServerRequestInterface</span> $request, <span style="color:#a6e22e">ResponseInterface</span> $response, <span style="color:#a6e22e">callable</span> $next)
+     {
+         $body  <span style="color:#f92672">=</span> $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getParsedBody</span>();
+         $token <span style="color:#f92672">=</span> $body[<span style="color:#e6db74">&#39;token&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#34;&#34;</span>;
+         <span style="color:#66d9ef">if</span> ($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">validTokens</span>[$request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getUri</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getPath</span>()] <span style="color:#f92672">!=</span> $token) {
+             <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">InvalidArgumentException</span>(<span style="color:#e6db74">&#34;Invalid Slack Token&#34;</span>);
+         }
+ 
+         <span style="color:#66d9ef">return</span> $next($request, $response, $error <span style="color:#f92672">??</span> <span style="color:#66d9ef">null</span>);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+All it’s doing is getting the parsed body from the request, (which we <strong>know</strong> is valid, because of <code>ValidateBody</code>), and then getting the token from the request (where Slack puts it), and checks it against valid slack tokens. If there’s a match, we continue onto the next middleware piece, and if not, we throw.</p>
+
+<p>This class has a dependency, which is <code>$this-&gt;validTokens</code>, which is an array of key values that look something like this:</p>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+[
+    <span style="color:#e6db74">&#39;/route1&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;slackToken&#39;</span>,
+    <span style="color:#e6db74">&#39;/route2&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;anotherSlackToken&#39;</span>,
+]
+</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>The reason why we’re injecting all possible valid tokens into this class will become clear later. What it allows is for our factory to remain stateless. This ends up making life much easier down the road for numerous reason. (more on that later)</p>
+
+<p>When we have a class with dependencies, we’ll need to tell expressive to instantiate it by using a factory. <code>ValidateSlackTokenFactory.php</code> in this case</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Validator\Slack</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Interop\Container\ContainerInterface</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ValidateSlackTokenFactory</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ContainerInterface</span> $container)
+     {
+         $validTokens <span style="color:#f92672">=</span> $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;config&#39;</span>)[<span style="color:#e6db74">&#39;slack_config&#39;</span>][<span style="color:#e6db74">&#39;tokens&#39;</span>] <span style="color:#f92672">??</span> [];
+ 
+         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ValidateSlackToken</span>($validTokens);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+Here, we’re getting the entire config array (autoloaded by expressive), and then narrowing our focus to just <code>slack_config</code>, and then to <code>tokens</code>.</p>
+
+<p>In tandem with the factory, we’ll need a config file that looks like this:</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">return</span> [
+    <span style="color:#e6db74">&#39;slack_config&#39;</span> <span style="color:#f92672">=&gt;</span> [
+        <span style="color:#e6db74">&#39;tokens&#39;</span> <span style="color:#f92672">=&gt;</span> [
+            <span style="color:#e6db74">&#39;/slack_jira&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;token&#39;</span>,
+            <span style="color:#75715e">// other routes =&gt; tokens would go here
+</span><span style="color:#75715e"></span>        ],
+    ],
+ ];
+</code></pre></td></tr></table>
+</div>
+</div>
+Here, we’re defining our route from before, and then our valid Slack token. In <code>ValidateSlackTokenFactory</code>, <code>$validTokens</code> ends up being <code>['/slack_jira' =&gt; 'token']</code>, which gets handed to our <code>ValidateSlackToken</code> middleware constructor.</p>
+
+<p>To show you what a typical factory tests looks like, there’s <code>ValidateSlackTokenFactoryTest.php</code>.</p>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">AppTest\Validator\Slack</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Validator\Slack\ValidateSlackToken</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Validator\Slack\ValidateSlackTokenFactory</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Interop\Container\ContainerInterface</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ValidateSlackTokenFactoryTest</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">\PHPUnit_Framework_TestCase</span>
+ {
+     <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">      * @test
+</span><span style="color:#e6db74">      */</span>
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">itWillDoTheNeedful</span>()
+     {
+         $container <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">prophesize</span>(<span style="color:#a6e22e">ContainerInterface</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+         $factory   <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ValidateSlackTokenFactory</span>();
+         $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;config&#39;</span>)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">shouldBeCalled</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">willReturn</span>([]);
+         $result <span style="color:#f92672">=</span> $factory($container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">reveal</span>());
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">assertInstanceOf</span>(<span style="color:#a6e22e">ValidateSlackToken</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>, $result);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>We’re making a new factory, making sure that <code>$container-&gt;get('config')</code> gets called, and then asserting on the output of the factory, which should be an instance of our middleware.</p>
+
+<p><a href="https://github.com/stringerbell/expressive-demo-jira-slack/blob/68f455995850b7afd6456b0245a1aed46aadf9aa/test/AppTest/Validator/Slack/ValidateSlackTokenTest.php">You can see another typical middleware tests for the ValidateSlackToken middleware here.</a></p>
+
+<p>In the interest of brevity (ha!), I’ve omitted tests for the rest of this post. Hopefully it’s clear what’s happening in the above tests so it’s really clear how to write other middleware tests.</p>
+
+<p>Also, along with all of this, if you want to set up your very own slack slash command, go to <code>https://$slackInstance.slack.com/apps/manage/custom-integrations</code> Here’s a couple of screenshots of what my setup looks like.</p>
+
+<p><img src="https://i.imgur.com/nQ4bRbl.png" alt="" /></p>
+
+<p><img src="https://i.imgur.com/46SOClF.png" alt="" /></p>
+
+<p>As an aside, if you don’t know about <a href="https://ngrok.com/">ngrok</a>, you should be using it. It lets you send real traffic to your localhost, which comes in especially handy when testing stuff like this.</p>
+
+<h1 id="more-packages-and-a-parser"><strong>More Packages, and a Parser</strong></h1>
+
+<p>Next, I added guzzle by running <code>composer require guzzlehttp/guzzle</code> <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/04642f83de2bd41fed4aea8f3cfa36543c50249c">changeset 04642f</a> Guzzle is awesome, and will come in handy when we need to start making requests from our app. After that’s finished, I ran <code>composer require zendframework/zend-console</code> <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/bcea1da8dc0794df5743b636c3379fc282321202">changeset bcea1d</a> which is used below to parse incoming input from Slack.</p>
+
+<p>We need something to parse the input incoming from slack. I initially made something that worked decently, but ultimately wound up with a more formal parser I found on stack overflow. <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/2ebf40ba2a853c4d9472059e7b5eeda67c2ab4b7">changeset 2ebf40</a></p>
+
+<p>To actually start using the parser, I stuck it in a piece of middleware, along with a Slack Client piece of middleware we can use to send messages back to the Slack user. <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/12beab35c3f5cbe67d28c77be4d77bcc82683071">changeset 12beab</a></p>
+
+<p>Our slack client is a wrapper around the basic Guzzle client, with a header added to make it a little easier to use:</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Client</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">GuzzleHttp\Client</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Interop\Container\ContainerInterface</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SlackClient</span>
+{
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ContainerInterface</span> $container)
+     {
+         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Client</span>([<span style="color:#e6db74">&#39;headers&#39;</span> <span style="color:#f92672">=&gt;</span> [<span style="color:#e6db74">&#39;Content-Type&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;application/json&#39;</span>]]);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+It follows the factory pattern in expressive, so we need to register it as such in <code>dependencies.global.php</code></p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">&#39;factories&#39;  =&gt; [
+<span style="color:#a6e22e">+ SlackClient::class =&gt; SlackClient::class,
+</span></code></pre></div>
+In <code>SlackJiraPipeline.php</code>, we’ll add our middleware that will handle and parse the input incoming from Slack.</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">$pipeline = new MiddlewarePipe();
+$pipeline-&gt;pipe($container-&gt;get(ValidateBody::class));
+$pipeline-&gt;pipe($container-&gt;get(ValidateSlackToken::class));
+<span style="color:#a6e22e">+$pipeline-&gt;pipe($container-&gt;get(ParseSlackJiraInput::class));
+</span></code></pre></div>
+Here’s what <code>ParseSlackJiraInput.php</code> looks like
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Validator\Slack</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Utility\ArgvParser</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">GuzzleHttp\Client</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ServerRequestInterface</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Zend\Console\Exception\RuntimeException</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Zend\Console\Getopt</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Zend\Stratigility\Http\ResponseInterface</span>;
+ 
+ <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ParseSlackJiraInput</span>
+ {
+     <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">      * @var Client
+</span><span style="color:#e6db74">      */</span>
+     <span style="color:#66d9ef">private</span> $slackClient;
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct(<span style="color:#a6e22e">Client</span> $slackClient)
+     {
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">slackClient</span> <span style="color:#f92672">=</span> $slackClient;
+     }
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ServerRequestInterface</span> $request, <span style="color:#a6e22e">ResponseInterface</span> $response, <span style="color:#a6e22e">callable</span> $next)
+     {
+         $body    <span style="color:#f92672">=</span> $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getParsedBody</span>();
+         $text    <span style="color:#f92672">=</span> $body[<span style="color:#e6db74">&#39;text&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>;
+         $args    <span style="color:#f92672">=</span> <span style="color:#a6e22e">ArgvParser</span><span style="color:#f92672">::</span><span style="color:#a6e22e">parseString</span>($text);
+         $_SERVER[<span style="color:#e6db74">&#39;argv&#39;</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/jira show issuesKey(s)[]&#34;</span>; <span style="color:#75715e">// will show up as usage message
+</span><span style="color:#75715e"></span>         <span style="color:#75715e">// you have to set register_argc_argv =&gt; On for this to work with Getopt, or you can dump things into $_SERVER[&#39;argv&#39;]
+</span><span style="color:#75715e"></span>         $opts <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Getopt</span>(
+             [
+                 <span style="color:#e6db74">&#39;p|public&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;publicly post option&#39;</span>,
+             ],
+             $args
+         );
+         <span style="color:#66d9ef">try</span> {
+             <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>$opts<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getOptions</span>() <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">count</span>($opts<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getArguments</span>()) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
+                 <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">RuntimeException</span>(<span style="color:#e6db74">&#34;Invalid arguments&#34;</span>, $opts<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getUsageMessage</span>());
+             }
+             <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>$opts<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getRemainingArgs</span>()) {
+                 <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">RuntimeException</span>(<span style="color:#e6db74">&#34;Invalid arguments&#34;</span>, $opts<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getUsageMessage</span>());
+             }
+             $body[<span style="color:#e6db74">&#39;args&#39;</span>] <span style="color:#f92672">=</span> $opts<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getRemainingArgs</span>();
+             <span style="color:#75715e">// set options in body for later
+</span><span style="color:#75715e"></span>             $body[<span style="color:#e6db74">&#39;response_type&#39;</span>] <span style="color:#f92672">=</span> $opts<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">public</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;in_channel&#39;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;ephemeral&#39;</span>;
+         } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">RuntimeException</span> $e) {
+             $responseBody <span style="color:#f92672">=</span> [
+                 <span style="color:#e6db74">&#39;text&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;Tried running: `</span><span style="color:#e6db74">{</span>$body[&#39;command&#39;]<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>$body[&#39;text&#39;]<span style="color:#e6db74">}</span><span style="color:#e6db74">` </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">.</span> $e<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getUsageMessage</span>(),
+             ];
+             $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">slackClient</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">post</span>(
+                 $body[<span style="color:#e6db74">&#39;response_url&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>,
+                 [
+                     <span style="color:#e6db74">&#39;body&#39;</span>    <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">json_encode</span>($responseBody),
+                     <span style="color:#e6db74">&#39;headers&#39;</span> <span style="color:#f92672">=&gt;</span> [
+                         <span style="color:#e6db74">&#39;Content-Type&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;application/json&#39;</span>,
+                     ],
+                 ]
+             );
+ 
+             $error <span style="color:#f92672">=</span> $e<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getUsageMessage</span>();
+         }
+ 
+         <span style="color:#66d9ef">return</span> $next($request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">withParsedBody</span>($body), $response, $error <span style="color:#f92672">??</span> <span style="color:#66d9ef">null</span>);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+We’ll get the parsed (validated) body, and pull out the text portion, and hand it off to our parser. The parser will split each value into elements in an array, and then hand it back to <code>Getopt</code>, which is from Zend Console.</p>
+
+<p>This makes it easy to do stuff like <code>$arg -o value</code>, and then pull out the <code>-o</code> value by doing something like <code>$result-&gt;o</code></p>
+
+<p>The above parser only accepts one option <code>-p</code> (making the results public, meaning it’ll post publicly, or default to ‘ephemeral’, meaning only the user who ran the slash command can see the results) Using the above pattern makes it trivial to add more functionality and options.</p>
+
+<p>I’ve found it helpful while building slash commands to echo out the command the user put in. It makes it clearer to the user if something doesn’t work, and is handy for sharing. We’re checking to make sure the user has more than one argument in their command, (meaning they can’t successfully run something like <code>/jira show</code>) and if not, we’re posting back to the user in slack the usage.</p>
+
+<p>Another benefit of doing it this way is so when new functionality gets added, or if someone is unfamiliar with options in this slash command, they can run <code>/jira</code> and get back usage info.</p>
+
+<p>If you notice on line 64, we’re calling <code>$next</code> with <code>$request-&gt;withParsedBody($body)</code>. This is so we can pass things into the request and use them later on.</p>
+
+<h1 id="making-a-request-to-jira"><strong>Making a request to JIRA</strong></h1>
+
+<p><a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/73975764f41ca38a8561e915f54145f80535f557">changeset 739757</a></p>
+
+<p>Now we’re finally at a point that we can query the JIRA API, and show an issue. Here’s what the relevant parts of <code>JiraShowIssueCommand.php</code> look like:</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Service\Jira</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">GuzzleHttp\Client</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">GuzzleHttp\Exception\ClientException</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">GuzzleHttp\UriTemplate</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ResponseInterface</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ServerRequestInterface</span>;
+ 
+ <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">JiraShowIssueCommand</span>
+ {
+     <span style="color:#e6db74">/** * @var Client */</span>
+     <span style="color:#66d9ef">private</span> $jiraClient;
+     <span style="color:#e6db74">/** * @var Client */</span>
+     <span style="color:#66d9ef">private</span> $slackClient;
+     <span style="color:#e6db74">/** * @var string */</span>
+     <span style="color:#66d9ef">private</span> $jiraUrl;
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct(<span style="color:#a6e22e">Client</span> $jiraClient, <span style="color:#a6e22e">Client</span> $slackClient, <span style="color:#a6e22e">string</span> $jiraUrl)
+     {
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">jiraClient</span>  <span style="color:#f92672">=</span> $jiraClient;
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">slackClient</span> <span style="color:#f92672">=</span> $slackClient;
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">jiraUrl</span>     <span style="color:#f92672">=</span> $jiraUrl;
+     }
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ServerRequestInterface</span> $request, <span style="color:#a6e22e">ResponseInterface</span> $response, <span style="color:#a6e22e">callable</span> $next)
+     {
+         $body <span style="color:#f92672">=</span> $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getParsedBody</span>();
+         <span style="color:#66d9ef">if</span> ($body[<span style="color:#e6db74">&#39;args&#39;</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;show&#34;</span>) {
+             <span style="color:#66d9ef">return</span> $next($request, $response);
+         }
+         $jobs        <span style="color:#f92672">=</span> <span style="color:#a6e22e">array_reverse</span>(<span style="color:#a6e22e">array_slice</span>($body[<span style="color:#e6db74">&#39;args&#39;</span>], <span style="color:#ae81ff">1</span>));
+         $uriTemplate <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">UriTemplate</span>();
+         $uri         <span style="color:#f92672">=</span> $uriTemplate<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">expand</span>(
+             <span style="color:#e6db74">&#39;rest/api/2/search?jql=key in ({issueKeys*})&amp;expand=editmeta&amp;fields=customfield_10024&amp;fields=summary&#39;</span>
+             <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;&amp;fields=creator&amp;fields=assignee&amp;fields=issuetype&amp;fields=priority&amp;fields=status&amp;fields=resolution&#39;</span>,
+             [
+                 <span style="color:#e6db74">&#39;issueKeys&#39;</span> <span style="color:#f92672">=&gt;</span> $jobs,
+             ]
+         );
+         <span style="color:#66d9ef">try</span> {
+             $json         <span style="color:#f92672">=</span> <span style="color:#a6e22e">json_decode</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">jiraClient</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>($uri)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getBody</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getContents</span>(), <span style="color:#66d9ef">true</span>);
+             $attachments  <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">prepareSlackAttachments</span>($json);
+             $responseBody <span style="color:#f92672">=</span> [
+                 <span style="color:#e6db74">&#39;text&#39;</span>          <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;Search Results for `</span><span style="color:#e6db74">{</span>$body[&#39;command&#39;]<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>$body[&#39;text&#39;]<span style="color:#e6db74">}</span><span style="color:#e6db74">`&#34;</span>,
+                 <span style="color:#e6db74">&#39;response_type&#39;</span> <span style="color:#f92672">=&gt;</span> $body[<span style="color:#e6db74">&#39;response_type&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;ephemeral&#39;</span>,
+                 <span style="color:#e6db74">&#39;attachments&#39;</span>   <span style="color:#f92672">=&gt;</span> $attachments,
+             ];
+             $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">slackClient</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">post</span>($body[<span style="color:#e6db74">&#39;response_url&#39;</span>], [<span style="color:#e6db74">&#39;body&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">json_encode</span>($responseBody)]);
+         } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">ClientException</span> $e) {
+             $error <span style="color:#f92672">=</span> $e<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getMessage</span>();
+             $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">slackClient</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">post</span>(
+                 $body[<span style="color:#e6db74">&#39;response_url&#39;</span>],
+                 [
+                     <span style="color:#e6db74">&#39;body&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">json_encode</span>(
+                         [
+                             <span style="color:#e6db74">&#39;text&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;Running `</span><span style="color:#e6db74">{</span>$body[&#39;command&#39;]<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>$body[&#39;text&#39;]<span style="color:#e6db74">}</span><span style="color:#e6db74">` didn&#39;t work. Got &#34;</span>
+                                 <span style="color:#f92672">.</span> $e<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getCode</span>() <span style="color:#f92672">.</span> <span style="color:#e6db74">&#34; for an HTTP response&#34;</span>,
+                         ]
+                     ),
+                 ]
+             );
+         }
+ 
+         <span style="color:#66d9ef">return</span> $next($request, $response, $error <span style="color:#f92672">??</span> <span style="color:#66d9ef">null</span>);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+First, on line 30, we’re checking to make sure we’re looking at a request that looks something like <code>/jira show $ISSUE-KEY</code> Then, we’re saving the rest of the arguments in the request body for our request to JIRA later on.</p>
+
+<p>The <code>UriTemplate</code> on line 34 from Guzzle makes it trivial to build a url dynamically using whatever data you need.</p>
+
+<p>The request we’re making will use JIRA’s JQL to request whatever issues we’re asking for by sticking them in <code>jql=key in ({issueKeys*})</code>. The rest of the query are the fields we care about. If there are multiple issues passed in, the template will automatically split them up using a comma, which is just what we need.</p>
+
+<p>After we have our uri built, we make a <code>GET</code> request using our JIRA client. That will return JSON data, which we hand into a function that formats our message in a format for slack to make it pretty. <a href="https://github.com/stringerbell/expressive-demo-jira-slack/blob/73975764f41ca38a8561e915f54145f80535f557/src/App/Service/Jira/JiraShowIssueCommand.php#L75-L104">You can see that bit of code here.</a></p>
+
+<p>Guzzle will throw an exception if an invalid HTTP response or any other type of error happens. If that’s the case, we’re using our Slack client to send the error back to the user.</p>
+
+<p>The factory for the above class looks like this <code>JiraShowIssueCommandFactory.php</code>:
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Service\Jira</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Client\JiraClient</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Client\SlackClient</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Interop\Container\ContainerInterface</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">JiraShowIssueCommandFactory</span>
+ {
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ContainerInterface</span> $container)
+     {
+         $jiraClient  <span style="color:#f92672">=</span> $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">JiraClient</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+         $slackClient <span style="color:#f92672">=</span> $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">SlackClient</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+         $jiraUrl     <span style="color:#f92672">=</span> $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;config&#39;</span>)[<span style="color:#e6db74">&#39;jira_config&#39;</span>][<span style="color:#e6db74">&#39;base_uri&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>;
+ 
+         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">JiraShowIssueCommand</span>($jiraClient, $slackClient, $jiraUrl);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+We are re-using our old Slack Client, and also using a JIRA client. It’s a bit different and has more config than our Slack Client. Here’s what it looks like.</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Client</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">GuzzleHttp\Client</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Interop\Container\ContainerInterface</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">JiraClient</span>
+{
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ContainerInterface</span> $container)
+     {
+         $config  <span style="color:#f92672">=</span> $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;config&#39;</span>)[<span style="color:#e6db74">&#39;jira_config&#39;</span>] <span style="color:#f92672">??</span> [];
+         $auth    <span style="color:#f92672">=</span> $config[<span style="color:#e6db74">&#39;auth&#39;</span>] <span style="color:#f92672">??</span> [];
+         $baseUri <span style="color:#f92672">=</span> $config[<span style="color:#e6db74">&#39;base_uri&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>;
+ 
+         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Client</span>(
+             [
+                 <span style="color:#e6db74">&#39;base_uri&#39;</span> <span style="color:#f92672">=&gt;</span> $baseUri,
+                 <span style="color:#e6db74">&#39;auth&#39;</span>     <span style="color:#f92672">=&gt;</span> [($auth[<span style="color:#e6db74">&#39;user&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>), ($auth[<span style="color:#e6db74">&#39;password&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;&#39;</span>)],
+                 <span style="color:#e6db74">&#39;headers&#39;</span>  <span style="color:#f92672">=&gt;</span> [
+                     <span style="color:#e6db74">&#39;Content-Type&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;application/json&#39;</span>,
+                 ],
+             ]
+         );
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+The main difference is that we know the <code>base_uri</code> for our JIRA instance, so we’ll construct it with that and we need to make requests using basic auth.</p>
+
+<p>The config file that’s driving the factory above looks like this (<code>jira_config.local.php.dist</code>):
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">return</span> [
+    <span style="color:#e6db74">&#39;jira_config&#39;</span> <span style="color:#f92672">=&gt;</span> [
+        <span style="color:#e6db74">&#39;auth&#39;</span> <span style="color:#f92672">=&gt;</span> [<span style="color:#e6db74">&#39;user&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;your JIRA username (not email)&#39;</span>, <span style="color:#e6db74">&#39;password&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;password&#39;</span>],
+        <span style="color:#e6db74">&#39;base_uri&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;https://$yourJiraInstance.atlassian.net/&#39;</span>,
+    ],
+];
+</code></pre></td></tr></table>
+</div>
+</div>
+It’s a <code>dist</code> file since it has our JIRA credentials in it. In production and locally, you should have a copy of this file with your real username and password to be able to make it work.</p>
+
+<p>After all of these are created, be sure to add them to your dependencies config file. Expressive will throw an easy to understand error back at you if you forget though.</p>
+
+<h1 id="final-steps"><strong>Final Steps</strong></h1>
+
+<p>We now have a working stack of middleware that receives, validates, and makes a query to JIRA.</p>
+
+<p>Here’s a screenshot of an example result:</p>
+
+<p><img src="http://i.imgur.com/j2kJsB0.png" alt="" /></p>
+
+<p>The last piece I added was to send a message back to the user on Slack when we’re done processing JIRA commands. <a href="https://github.com/stringerbell/expressive-demo-jira-slack/commit/4c8ceb644d804bf6ff246a6bb1133d05943923b6">changeset 4c8ceb</a></p>
+
+<p>A handy thing you can do with Zend’s Service Manager is call build instead of get, with config options. Here’s what we’re adding to our pipeline.</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">class SlackJiraPipeline
+ {
+     public function __invoke(ContainerInterface $container)
+     {
+         $pipeline = new MiddlewarePipe();
+         $pipeline-&gt;pipe($container-&gt;get(ValidateBody::class));
+         $pipeline-&gt;pipe($container-&gt;get(ValidateSlackToken::class));
+         $pipeline-&gt;pipe($container-&gt;get(ParseSlackJiraInput::class));
+         $pipeline-&gt;pipe($container-&gt;get(JiraShowIssueCommand::class));
+<span style="color:#a6e22e">+        $pipeline-&gt;pipe(
+</span><span style="color:#a6e22e">+          $container-&gt;build(SendMessageToSlackUserViaResponseUrl::class, [&#39;message&#39; =&gt; &#39;Processing Complete&#39;])
+</span><span style="color:#a6e22e">+        );
+</span></code></pre></div>
+Here’s the corresponding middleware:</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Service\Slack</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">GuzzleHttp\Client</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ResponseInterface</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Psr\Http\Message\ServerRequestInterface</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SendMessageToSlackUserViaResponseUrl</span>
+ {
+     <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">      * @var Client
+</span><span style="color:#e6db74">      */</span>
+     <span style="color:#66d9ef">private</span> $slackClient;
+     <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">      * @var string
+</span><span style="color:#e6db74">      */</span>
+     <span style="color:#66d9ef">private</span> $message;
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct(<span style="color:#a6e22e">Client</span> $slackClient, <span style="color:#a6e22e">string</span> $message)
+     {
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">slackClient</span> <span style="color:#f92672">=</span> $slackClient;
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">message</span>     <span style="color:#f92672">=</span> $message;
+     }
+ 
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ServerRequestInterface</span> $request, <span style="color:#a6e22e">ResponseInterface</span> $response, <span style="color:#a6e22e">callable</span> $next)
+     {
+         $body         <span style="color:#f92672">=</span> $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getParsedBody</span>();
+         $responseBody <span style="color:#f92672">=</span> [
+             <span style="color:#e6db74">&#39;text&#39;</span>          <span style="color:#f92672">=&gt;</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">message</span>,
+             <span style="color:#e6db74">&#39;response_type&#39;</span> <span style="color:#f92672">=&gt;</span> $body[<span style="color:#e6db74">&#39;response_type&#39;</span>] <span style="color:#f92672">??</span> <span style="color:#e6db74">&#39;ephemeral&#39;</span>,
+         ];
+         $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">slackClient</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">post</span>($body[<span style="color:#e6db74">&#39;response_url&#39;</span>], [<span style="color:#e6db74">&#39;body&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">json_encode</span>($responseBody)]);
+ 
+         <span style="color:#66d9ef">return</span> $next($request, $response, $error <span style="color:#f92672">??</span> <span style="color:#66d9ef">null</span>);
+     }
+}
+</code></pre></td></tr></table>
+</div>
+</div>
+This takes in a Slack Client, and a message, and then uses that message to send to Slack via the <code>response_url</code> in the body.</p>
+
+<p>Here’s the factory:</p>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Service\Slack</span>;
+
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">App\Client\SlackClient</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Interop\Container\ContainerInterface</span>;
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SendMessageToSlackUserViaResponseUrlFactory</span>
+{
+     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __invoke(<span style="color:#a6e22e">ContainerInterface</span> $container, $requestedName, <span style="color:#66d9ef">array</span> $options <span style="color:#f92672">=</span> [])
+     {
+         $defaults <span style="color:#f92672">=</span> [
+             <span style="color:#e6db74">&#39;message&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;You sent a message, but forgot to replace the default! Go you! 
+</span><span style="color:#e6db74">  You should probably use `build`&#39;</span>,
+         ];
+         $options <span style="color:#f92672">+=</span> $defaults;
+         $slackClient <span style="color:#f92672">=</span> $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">SlackClient</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
+ 
+         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">SendMessageToSlackUserViaResponseUrl</span>($slackClient, $options[<span style="color:#e6db74">&#39;message&#39;</span>]);
+     }
+ }
+</code></pre></td></tr></table>
+</div>
+</div>
+Expressive will take in options that you pass to it at runtime. We set up a default message, and then pass it along to our middleware.</p>
+
+<p>Here’s a screenshot of the result using the complete message at the end. We’re also passing in the <code>-p</code> option to post the result publicly.</p>
+
+<p><img src="http://i.imgur.com/0FPUluV.png" alt="Slack Example" /></p>
+
+<p>That’s it! Hopefully you now have a good overview of how to connect Slack to JIRA, and potentially any other service using expressive.</p>
+
+<p>One other practical considerations, is queuing requests, and responding to slack immediately instead of processing commands in real-time. You’ll probably get timeout errors from Slack if you’re not doing that, even though it’ll still probably work. Since this is already a really long post, I’ll have to cover how to do that in a different post.</p>
+
+<p>Thanks for reading, and I hope you enjoyed it. Please feel free to ask me any questions you have via email or <a href="https://twitter.com/dannnstockton">twitter</a>. If you want me to walk through anything else that you think would be interested, I’d be especially interested to hear from you.</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'>
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/posts/why-i-taught-myself-how-to-code/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>How I got into building stuff with software.</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/posts/using-machine-learning-to-summarize-meeting-notes/'>
+        <span class='screen-reader-text'>Next post: </span>Using Machine Learning™️ To Summarize Meeting Notes<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+    <ul><li>
+        <a href='https://github.com/stringerbell' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:dannstockton%20at%20the%20google%20owned%20e-mail%20site' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><div class='copyright'>
+  <p> &copy; 1970-2019 Dann Stockton </p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.69694257.js'></script><script src='/js/custom.js'></script>
+
+</body>
+
+</html>
+

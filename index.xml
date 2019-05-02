@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dann Stockton</title>
+    <link>https://dannstockton.com/</link>
+    <description>Recent content on Dann Stockton</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 30 May 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://dannstockton.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Using Machine Learning™️ To Summarize Meeting Notes</title>
+      <link>https://dannstockton.com/posts/using-machine-learning-to-summarize-meeting-notes/</link>
+      <pubDate>Wed, 30 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://dannstockton.com/posts/using-machine-learning-to-summarize-meeting-notes/</guid>
+      <description>TL;DR: I made an app that uses technology like such as Machine Learning™ to summarize only the most important bits of your meeting notes.
+Machine Learning™ Meeting Notes Summarizer
+
+I just built a nifty tool. I was sitting in a long meeting the other day, and was thinking:
+ Oh man. This meeting has really gotten off track. I wish there was a tool out there to summarize only the important parts of my notes I&amp;rsquo;m taking.</description>
+    </item>
+    
+    <item>
+      <title>Building Slack Slash Commands For Fun And Profit</title>
+      <link>https://dannstockton.com/posts/building-slack-slash-commands-for-fun-and-profit/</link>
+      <pubDate>Mon, 30 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://dannstockton.com/posts/building-slack-slash-commands-for-fun-and-profit/</guid>
+      <description>I’ve been recently learning about and using expressive, a microframework made in PHP that uses PSR-7.
+In this post, I’d like to walk through how I made the /jira Slack slash command at my job. If you want to follow along, you can check out the repo here, and then run composer install to get all the dependencies installed. Also, I’m using PHP 7, so be sure to have that running if you’d like to run these examples.</description>
+    </item>
+    
+    <item>
+      <title>How I got into building stuff with software.</title>
+      <link>https://dannstockton.com/posts/why-i-taught-myself-how-to-code/</link>
+      <pubDate>Mon, 02 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://dannstockton.com/posts/why-i-taught-myself-how-to-code/</guid>
+      <description>I resisted getting into programming for much longer than I should have.
+My brother has been a programmer for his entire life. I grew up with computers, and my dad always bought the latest and greatest computers. I mostly played games, and my older brother played games he programmed.
+Growing up, I goofed around with geocities, and ended up teaching myself CSS and HTML so I could build my first website to sell portraits I was painting at the time.</description>
+    </item>
+    
+    <item>
+      <title>resume</title>
+      <link>https://dannstockton.com/resume/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dannstockton.com/resume/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
