@@ -45,5 +45,14 @@ My brother has been a programmer for his entire life. I grew up with computers, 
 Growing up, I goofed around with geocities, and ended up teaching myself CSS and HTML so I could build my first website to sell portraits I was painting at the time.</description>
     </item>
     
+    <item>
+      <title>resume</title>
+      <link>https://dannstockton.com/resume/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dannstockton.com/resume/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
