@@ -6,6 +6,7 @@
     "email": "dannstockton@gmail.com",
     "phone": "Upon Request",
     "website": "https://dannstockton.com",
+    "summary": "8 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
     "highlights": [
       "• 6 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
       "• Team player that works best in collaborative environments.",
@@ -25,45 +26,40 @@
   },
   "work": [
     {
+      "company": "Subsplash",
+      "position": "Software Development Engineer III (Technical Lead)",
+      "website": "https://subsplash.com",
+      "startDate": "2019-07-22",
+      "summary": "Non-profit giving platform",
+      "highlights": [
+         "• Supported the platform during high growth. ~10x growth in ~2 years.",
+         "• Migrated lots of legacy PHP software to Golang microservices while shipping new features to help increase stability without downtime",
+         "• Technical Lead for a team of five engineers",
+         "• Reduced complexity, increased reliability, and visibility for customer signup process by using Step Functions/FSM",
+         "• Led the projects for shipping Stripe KYC/AML requirements, Donor Covered Fees, Anti-fraud tools, Guest Giving, Offline Donations, Check Scanning, Donor Merge, Non-Charitable Payments, Audit Logging",
+         "• Helped build customer onboarding process to increase revenue, and reduce customer churn.",
+         "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals",
+         "• Upgraded legacy PHP 5.6 applications to PHP 7+",
+         "• Used golang to help increase system reliability and code maintainability"
+      ]
+    },
+    {
       "company": "i3logix",
       "position": "Sr. Software Engineer (Team/Technical Lead)",
       "website": "https://ballottrax.com",
       "startDate": "2016-01-04",
+      "endDate": "2019-07-01",
       "summary": "Mail-in ballot tracking, developer workflow automation.",
       "highlights": [
-        {
-          "description": "• Started out as a 'Software Developer', received promotion after six months to 'Software Engineer'. Received another promotion to 'Senior Software Engineer'."
-        },
-        {
-          "description": "• Led three engineers for ballottrax"
-        },
-        {
-          "description": "• Led the project to build a native iOS app (Swift 3, 4, a little bit of React Native)",
-          "link": "https://itunes.apple.com/us/app/ballottrax/id1214500178?mt=8"
-        },
-        {
-          "description": "• Reduced complexity of UI by implementing a FSM"
-        },
-        {
-          "description": "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals"
-        },
-        {
-          "description": "• Led the project to automate tedious developer workflows, implement various business processes, and connect various services together using Slack as a CLI. (Like an internal IFTTT)"
-        },
-        {
-          "description": "• Developed custom 30+ Slack slash commands: /auto_merge, /whynotmerge, /rebase, /mailgun, /twilio, /chipotle, /jenkins, /jira, /scrum"
-        },
-        {
-          "description": "• Rebase button workflow",
-          "link": "http://i.imgur.com/kamcLt2.png"
-        },
-        {
-          "description": "• Why Not Merge",
-          "link": "https://i.imgur.com/OUsUgbv.png"
-        },
-        {
-          "description": "• Built in Zend Framework 2-3, Apigility, Zend Expressive 1-3 using PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, Centos"
-        }
+        "• Started out as a 'Software Developer', received promotion after six months to 'Software Engineer'. Received another promotion to 'Senior Software Engineer'",
+        "• Led three engineers for ballottrax",
+        "• Led the project to build a native iOS app (Swift 3, 4, a little bit of React Native)",
+        "• Reduced complexity of UI by implementing a FSM",
+        "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals",
+        "• Led the project to automate tedious developer workflows, implement various business processes, and connect various services together using Slack as a CLI. (Like an internal IFTTT)",
+        "• Developed custom 30+ Slack slash commands: /auto_merge, /whynotmerge, /rebase, /mailgun, /twilio, /chipotle, /jenkins, /jira, /scrum",
+        "• Rebase button workflow",
+        "• Built in Zend Framework 2-3, Apigility, Zend Expressive 1-3 using PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, Centos"
       ]
     },
     {
@@ -74,30 +70,14 @@
       "endDate": "2016-01-01",
       "summary": "Turnkey apps/content management for churches & non-profits",
       "highlights": [
-        {
-          "description": "• Led the effort to migrate payment processing to Stripe, implemented and automated a customer sign-up/account creation/follow-up process using webhooks, along with analytics, reporting, and data processing for the finance team"
-        },
-        {
-          "description": "• Automated front-end process improvements by creating gulp.js build scripts (semantic sprites, LESS/CSS/JS minification, image optimization, live reload)"
-        },
-        {
-          "description": "• Parallelized push notification work using async workers/DB queues"
-        },
-        {
-          "description": "• Built API to enable podcasting"
-        },
-        {
-          "description": "• Built a custom RSS/Atom parser for a \"reader\" project"
-        },
-        {
-          "description": "• Helped build \"web player\" product from the ground up, implemented \"auto-resume\" feature"
-        },
-        {
-          "description": "• Overhauled legacy iCal parser, implemented sabre-vobject library"
-        },
-        {
-          "description": "• Used imagick library to automate image processing/manipulation (primary color, image montage, promo widget)"
-        }
+        "• Led the effort to migrate payment processing to Stripe, implemented and automated a customer sign-up/account creation/follow-up process using webhooks, along with analytics, reporting, and data processing for the finance team",
+        "• Automated front-end process improvements by creating gulp.js build scripts (semantic sprites, LESS/CSS/JS minification, image optimization, live reload)",
+        "• Parallelized push notification work using async workers/DB queues",
+        "• Built API to enable podcasting",
+        "• Built a custom RSS/Atom parser for a \"reader\" project",
+        "• Helped build \"web player\" product from the ground up, implemented \"auto-resume\" feature",
+        "• Overhauled legacy iCal parser, implemented sabre-vobject library",
+        "• Used imagick library to automate image processing/manipulation (primary color, image montage, promo widget)"
       ]
     },
     {
@@ -107,12 +87,8 @@
       "endDate": "2014-08-01",
       "summary": "Digital Order Fulfillment for artists after their kickstarter project ends",
       "highlights": [
-        {
-          "description": "• Built it to offer digital fulfillment for crowd-funded projects, automating the pain of sending out lots of digital assets to lots of people reliably with a full set of features"
-        },
-        {
-          "description": "• Built in Zend Framework 1 using PHP5-FPM 5.5, MySQL, HTML5, JS, AJAX, ZMQ, Vagrant, Nginx, Ubuntu"
-        }
+         "• Built it to offer digital fulfillment for crowd-funded projects, automating the pain of sending out lots of digital assets to lots of people reliably with a full set of features",
+         "• Built in Zend Framework 1 using PHP5-FPM 5.5, MySQL, HTML5, JS, AJAX, ZMQ, Vagrant, Nginx, Ubuntu"
       ]
     },
     {
@@ -122,27 +98,13 @@
       "endDate": "2013-08-01",
       "summary": "Touring Musician",
       "highlights": [
-        {
-          "description": "• Implemented, managed, maintained Website/Marketing/Content Strategy"
-        },
-        {
-          "description": "• Helped grow our email list from 0-60,000 with various marketing strategies"
-        },
-        {
-          "description": "• Launched, built and maintained the system and server to facilitate giving away 226K albums in a the span of a month (March, 2013)"
-        },
-        {
-          "description": "• Built automated incentive system for users to tweet/like/send an email in exchange for a download"
-        },
-        {
-          "description": "• Built logistical tool for tour management and ticket sales"
-        },
-        {
-          "description": "• Built complete ticketing system, and date/show manager on top of Google Calendar and Stripe"
-        },
-        {
-          "description": "• Built internal CRM tools to improve customer experience"
-        }
+         "• Implemented, managed, maintained Website/Marketing/Content Strategy",
+         "• Helped grow our email list from 0-60,000 with various marketing strategies",
+         "• Launched, built and maintained the system and server to facilitate giving away 226K albums in a the span of a month (March, 2013)",
+         "• Built automated incentive system for users to tweet/like/send an email in exchange for a download",
+         "• Built logistical tool for tour management and ticket sales",
+         "• Built complete ticketing system, and date/show manager on top of Google Calendar and Stripe",
+         "• Built internal CRM tools to improve customer experience"
       ]
     }
   ],
@@ -150,9 +112,11 @@
     {
       "name": "Web Development",
       "keywords": [
+        "Golang",
         "PHP",
         "PHPUnit",
         "PHPSpec",
+        "Docker",
         "Behat/Gherkin",
         "ZF 1, 2, 3",
         "Expressive 1, 2, 3",
@@ -171,9 +135,6 @@
         "Git",
         "Mercurial",
         "Composer",
-        "Nginx",
-        "Apache",
-        "Vagrant",
         "RabbitMQ"
       ]
     },
@@ -205,7 +166,7 @@
       "publisher": "https://www.sandimetz.com/99bottles",
       "summary": "99 Bottles of OOP is a practical guide to writing cost-effective, maintainable, and pleasing object-oriented code.",
       "url": "https://sandimetz.dpdcart.com/",
-      "releaseDate": "Coming in 2019"
+      "releaseDate": "2019"
     }
   ]
 }
