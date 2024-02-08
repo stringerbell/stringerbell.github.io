@@ -2,13 +2,13 @@
   "basics": {
     "name": "Dann Stockton",
     "label": "Software Engineer",
-    "picture": "",
+    "picture": "https://dannstockton.com/images/logo.png",
     "email": "dannstockton@gmail.com",
     "phone": "Upon Request",
     "website": "https://dannstockton.com",
-    "summary": "8 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
+    "summary": "10 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
     "highlights": [
-      "• 6 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
+      "• 10 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
       "• Team player that works best in collaborative environments.",
       "• Excited about solving hard problems that have real world uses.",
       "• Future oriented.",
@@ -27,24 +27,34 @@
   "work": [
     {
       "company": "Subsplash",
-      "position": "Software Development Engineer III (Technical Lead)",
+      "name": "Subsplash",
+      "position": "Staff Software Engineer (Technical Lead)",
       "website": "https://subsplash.com",
       "startDate": "2019-07-22",
-      "summary": "Non-profit giving platform",
+      "summary": "Payments team",
       "highlights": [
-         "• Supported the platform during high growth. ~10x growth in ~2 years.",
-         "• Migrated lots of legacy PHP software to Golang microservices while shipping new features to help increase stability without downtime",
-         "• Served as a Technical Lead for a team of five engineers",
-         "• Reduced complexity, increased reliability, and visibility for customer signup process by using Step Functions/FSM",
-         "• Led the projects for shipping Stripe KYC/AML requirements, Donor Covered Fees, Anti-fraud tools, Guest Giving, Offline Donations, Check Scanning, Donor Merge, Non-Charitable Payments, Audit Logging",
-         "• Helped build customer onboarding process to increase revenue, and reduce customer churn.",
-         "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals",
-         "• Upgraded legacy PHP 5.6 applications to PHP 7+",
-         "• Used golang to help increase system reliability and code maintainability"
+        "• Supported the platform during high growth. ~10x growth in ~2 years.",
+        "• Led the projects for shipping Stripe KYC/AML requirements, Donor Covered Fees, Anti-fraud tools, Guest Giving, Offline Donations, Check Scanning, Donor Merge, Non-Charitable Payments, Audit Logging, Split Gifts, Fund Management, Bulk Import, Statements Generation, successful migration of business-critical, jQuery app for end-users into a react app to increase maintainability, increase revenue, increase development velocity, and decrease fraud",
+        "• Migrated lots of legacy PHP software to Golang microservices while shipping new features to help increase stability without downtime",
+        "• Served as a Technical Lead for a team of 3-6 engineers",
+        "• Reduced complexity, increased reliability, and visibility for customer signup process by using Step Functions/FSM",
+        "• Helped build customer onboarding process to increase revenue, and reduce customer churn.",
+        "• Upgraded legacy PHP 5.6 applications to PHP 7+",
+        "• Used golang to help increase system reliability and code maintainability",
+        "• Helped increase stability on legacy customer-facing integration application",
+        "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, decrease conditionals, and address security vulnerabilities"
+      ],
+      "quotes": [
+        "• Despite the team being understaffed, Dann has been able to maintain a consistent output and drive work to completion",
+        "• Dann's efforts were monumental in shipping the new giving experience",
+        "• Dann has demonstrated frequent \"big picture\" thinking and has effectively communicated strategy and details both up and out",
+        "• Dann leads by example and has demonstrated extreme ownership in his efforts both across New Giving Experience",
+        "• Feedback from others has been incredibly positive about you this past year."
       ]
     },
     {
       "company": "i3logix",
+      "name": "i3logix",
       "position": "Sr. Software Engineer (Team/Technical Lead)",
       "website": "https://ballottrax.com",
       "startDate": "2016-01-04",
@@ -63,6 +73,7 @@
       ]
     },
     {
+      "name": "Subsplash",
       "company": "Subsplash",
       "position": "Web Developer",
       "website": "https://subsplash.com",
@@ -81,6 +92,7 @@
       ]
     },
     {
+      "name": "Kicksender",
       "company": "Kicksender",
       "position": "Founder",
       "startDate": "2013-08-01",
@@ -92,6 +104,7 @@
       ]
     },
     {
+      "name": "Tifah LLC",
       "company": "Tifah LLC",
       "position": "Co-Founder",
       "startDate": "2005-03-01",
@@ -112,17 +125,20 @@
     {
       "name": "Web Development",
       "keywords": [
+        "git",
         "Golang",
+        "Docker",
+        "Kubernetes",
+        "Javascript",
+        "React",
         "PHP",
+        "Composer",
         "PHPUnit",
         "PHPSpec",
-        "Docker",
         "Behat/Gherkin",
         "ZF 1, 2, 3",
         "Expressive 1, 2, 3",
         "Swift",
-        "Javascript",
-        "React",
         "Redux",
         "Statecharts",
         "Jest",
@@ -132,20 +148,18 @@
         "CSS",
         "Jekyll",
         "Gulp",
-        "Git",
         "Mercurial",
-        "Composer",
         "RabbitMQ"
       ]
     },
     {
       "name": "APIs",
       "keywords": [
+        "Stripe",
+        "Amazon Web Services",
         "Slack",
         "Twilio",
         "Mailgun",
-        "Amazon Web Services",
-        "Stripe",
         "Twitter",
         "Facebook",
         "Bitbucket",
