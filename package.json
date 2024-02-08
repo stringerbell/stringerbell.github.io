@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "jsonresume-theme-contempo": "^0.0.3",
+    "jsonresume-theme-fresh": "^0.0.3",
+    "jsonresume-theme-latte": "^1.0.2",
+    "jsonresume-theme-onepage": "^0.0.3"
+  }
+}
