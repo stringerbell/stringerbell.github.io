@@ -4,18 +4,9 @@
     "label": "Software Engineer",
     "picture": "https://dannstockton.com/images/logo.png",
     "email": "dannstockton@gmail.com",
-    "phone": "Upon Request",
+    "phone": "303-304-9186",
     "website": "https://dannstockton.com",
-    "summary": "10 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
-    "highlights": [
-      "• 10 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.",
-      "• Team player that works best in collaborative environments.",
-      "• Excited about solving hard problems that have real world uses.",
-      "• Future oriented.",
-      "• Big-picture person with a focus on important details (like customer experience/service).",
-      "• Able to bridge the gap to communicate technical ideas into layman’s terms.",
-      "• Passionate about the web and mobile."
-    ],
+    "summary": "Results-driven software engineer with 10 years of experience. Proven track record of designing and implementing scalable solutions in the payments space. Seeking opportunities to leverage technical expertise and leadership skills to drive innovation and deliver impactful solutions in a dynamic team environment.",
     "profiles": [
       {
         "network": "github",
@@ -33,16 +24,14 @@
       "startDate": "2019-07-22",
       "summary": "Payments team",
       "highlights": [
-        "• Supported the platform during high growth. ~10x growth in ~2 years.",
-        "• Led the projects for shipping Stripe KYC/AML requirements, Donor Covered Fees, Anti-fraud tools, Guest Giving, Offline Donations, Check Scanning, Donor Merge, Non-Charitable Payments, Audit Logging, Split Gifts, Fund Management, Bulk Import, Statements Generation, successful migration of business-critical, jQuery app for end-users into a react app to increase maintainability, increase revenue, increase development velocity, and decrease fraud",
-        "• Migrated lots of legacy PHP software to Golang microservices while shipping new features to help increase stability without downtime",
-        "• Served as a Technical Lead for a team of 3-6 engineers",
-        "• Reduced complexity, increased reliability, and visibility for customer signup process by using Step Functions/FSM",
-        "• Helped build customer onboarding process to increase revenue, and reduce customer churn.",
-        "• Upgraded legacy PHP 5.6 applications to PHP 7+",
-        "• Used golang to help increase system reliability and code maintainability",
-        "• Helped increase stability on legacy customer-facing integration application",
-        "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, decrease conditionals, and address security vulnerabilities"
+        "Led the payments team through explosive, COVID-fueled growth. Approximately 10x over two years. Now processing ~$2BB/year.",
+        "Led the project to integrate with Stripe Treasury resulting in increased revenue.",
+        "Part of an on-call rotation",
+        "Served as the Technical Lead for a dedicated team of 3-6 engineers, providing strategic guidance and technical oversight to ensure project success and team cohesion.",
+        "Provided mentorship and guidance to junior developers, imparting best practices and fostering skill development in writing valuable tests, simplifying logic, reducing conditionals, and addressing security vulnerabilities, thereby contributing to their professional growth and the overall success of the team.",
+        "Implemented many high-impact features to help increase revenue, and maintainability, and decrease fraud.",
+        "Migrated critical payment systems away from legacy PHP software to maintainable Golang microservices, with zero downtime.",
+        "Used metrics to streamline the customer signup process by leveraging Step Functions/FSM, which drastically reduced complexity, increased reliability, and improved observability, ultimately elevating the overall user experience."
       ],
       "quotes": [
         "• Despite the team being understaffed, Dann has been able to maintain a consistent output and drive work to completion",
@@ -61,15 +50,14 @@
       "endDate": "2019-07-01",
       "summary": "Mail-in ballot tracking, developer workflow automation.",
       "highlights": [
-        "• Started out as a 'Software Developer', received promotion after six months to 'Software Engineer'. Received another promotion to 'Senior Software Engineer'",
-        "• Led three engineers for ballottrax",
-        "• Led the project to build a native iOS app (Swift 3, 4, a little bit of React Native)",
-        "• Reduced complexity of UI by implementing a FSM",
-        "• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals",
-        "• Led the project to automate tedious developer workflows, implement various business processes, and connect various services together using Slack as a CLI. (Like an internal IFTTT)",
-        "• Developed custom 30+ Slack slash commands: /auto_merge, /whynotmerge, /rebase, /mailgun, /twilio, /chipotle, /jenkins, /jira, /scrum",
-        "• Built a rebase button workflow",
-        "• Built in Zend Framework 2-3, Apigility, Zend Expressive 1-3 using PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, Centos"
+        "Progressed from a Software Developer role to Software Engineer within six months, subsequently advancing to Senior Software Engineer, demonstrating consistent growth and contributions to the organization.",
+        "Led a team of three engineers for the development of Ballottrax, demonstrating leadership and project management skills in delivering successful outcomes.",
+        "Spearheaded the creation of a native iOS app using Swift 3 and 4, supplemented with React Native elements, showcasing versatility in mobile app development.",
+        "Simplified user interface complexity by implementing a Finite State Machine (FSM), resulting in improved usability and user experience.",
+        "Directed a project to automate developer workflows, streamline business processes, and integrate various services using Slack as a Command-Line Interface (CLI), akin to an internal IFTTT platform.",
+        "Developed over 30 custom Slack slash commands including /auto_merge, /whynotmerge, /rebase, /mailgun, and /twilio, among others, facilitating seamless communication and task automation within the team.",
+        "Engineered a rebase button workflow, streamlining version control processes and enhancing developer efficiency.",
+        "Proficiently utilized a tech stack comprising Zend Framework 2-3, Apigility, Zend Expressive 1-3, PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, and CentOS to build robust and scalable applications, showcasing expertise across various technologies and platforms."
       ]
     },
     {
@@ -81,14 +69,11 @@
       "endDate": "2016-01-01",
       "summary": "Turnkey apps/content management for churches & non-profits",
       "highlights": [
-        "• Led the effort to migrate payment processing to Stripe, implemented and automated a customer sign-up/account creation/follow-up process using webhooks, along with analytics, reporting, and data processing for the finance team",
-        "• Automated front-end process improvements by creating gulp.js build scripts (semantic sprites, LESS/CSS/JS minification, image optimization, live reload)",
-        "• Parallelized push notification work using async workers/DB queues",
-        "• Built API to enable podcasting",
-        "• Built a custom RSS/Atom parser for a \"reader\" project",
-        "• Helped build \"web player\" product from the ground up, implemented \"auto-resume\" feature",
-        "• Overhauled legacy iCal parser, implemented sabre-vobject library",
-        "• Used imagick library to automate image processing/manipulation (primary color, image montage, promo widget)"
+        "Orchestrated the migration of payment processing systems to Stripe, spearheading the implementation and automation of a comprehensive customer sign-up and account creation process utilizing webhooks. Additionally, established analytics, reporting, and data processing functionalities to streamline financial operations.",
+        "Automated front-end process enhancements by developing gulp.js build scripts, incorporating features such as semantic sprites, LESS/CSS/JS minification, image optimization, and live reload, resulting in improved development efficiency and enhanced user experience.",
+        "Enhanced push notification functionality by parallelizing tasks using asynchronous workers and queues, significantly improving performance and scalability of the system.",
+        "Engineered a custom RSS/Atom parser for a reader project, enabling efficient parsing and organization of syndicated content for enhanced user engagement.",
+        "Built an in-house image manipulation library to automate previously error-prone and manual image processing and manipulation tasks, including primary color extraction, image montage creation, and promo widget generation, streamlining content creation processes, enhancing visual appeal and reducing toil"
       ]
     },
     {
@@ -134,42 +119,27 @@
         "PHP",
         "Composer",
         "PHPUnit",
-        "PHPSpec",
         "Behat/Gherkin",
-        "ZF 1, 2, 3",
-        "Expressive 1, 2, 3",
         "Swift",
         "Redux",
         "Statecharts",
-        "Jest",
-        "Ruby",
-        "RSpec",
-        "Watir",
-        "CSS",
-        "Jekyll",
-        "Gulp",
-        "Mercurial",
-        "RabbitMQ"
+        "CSS"
       ]
     },
     {
       "name": "APIs",
       "keywords": [
         "Stripe",
-        "Amazon Web Services",
+        "AWS",
         "Slack",
         "Twilio",
         "Mailgun",
         "Twitter",
-        "Facebook",
         "Bitbucket",
         "Jira",
         "Github",
-        "Zendesk",
         "ZMQ",
-        "Google Calendar",
         "RabbitMQ",
-        "Mandrill",
         "Jenkins"
       ]
     }
@@ -177,7 +147,7 @@
   "publications": [
     {
       "name": "99 Bottles of OOP (PHP Version)",
-      "publisher": "https://www.sandimetz.com/99bottles",
+      "publisher": "https://sandimetz.com/99bottles",
       "summary": "99 Bottles of OOP is a practical guide to writing cost-effective, maintainable, and pleasing object-oriented code.",
       "url": "https://sandimetz.dpdcart.com/",
       "releaseDate": "2019"
