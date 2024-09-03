@@ -1,829 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Dann Stockton</title>
+    <meta name="description" content="Results-driven software engineer with 10 years of experience. Proven track record of designing and implementing scalable solutions in the payments space. Seeking opportunities to leverage technical expertise and leadership skills to drive innovation and deliver impactful solutions in a dynamic team environment.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap">
+    <style>:root {
+        /* Colors */
+        --primaryColor: #212529;
+        --secondaryColor: #95a5a6;
+        --accentColor: #f1c40f;
+        --linkColor: #2ecc71;
+        --mutedColor: #f4f6f6;
 
-<!doctype html>
-<html>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-<title>Dann Stockton</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-<link href='https://fonts.googleapis.com/css?family=Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
-<style>
-    /********************************************
-* 	reset from
-* 	http://meyerweb.com/eric/tools/css/reset/
-*******************************************/
-    html, body, div, span, applet, object, iframe,
-    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-    a, abbr, acronym, address, big, cite, code,
-    del, dfn, em, img, ins, kbd, q, s, samp,
-    small, strike, strong, sub, sup, tt, var,
-    b, u, i, center,
-    dl, dt, dd, ol, ul, li,
-    fieldset, form, label, legend,
-    table, caption, tbody, tfoot, thead, tr, th, td,
-    article, aside, canvas, details, embed,
-    figure, figcaption, footer, header, hgroup,
-    menu, nav, output, ruby, section, summary,
-    time, mark, audio, video {
+        /* Typography */
+        --ratio: 1.25;
+        --scale0: 1rem;
+        --scale1: calc(var(--scale0) * var(--ratio));
+        --scale2: calc(var(--scale1) * var(--ratio));
+        --scale3: calc(var(--scale2) * var(--ratio));
+        --scale4: calc(var(--scale3) * var(--ratio));
+        --scale5: calc(var(--scale4) * var(--ratio));
+    }
+
+    * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        border: 0;
-        font-size: 100%;
-        vertical-align: baseline;
     }
-    article, aside, details, figcaption, figure,
-    footer, header, hgroup, menu, nav, section {
-        display: block;
+
+    html {
+        font-size: 14px;
     }
+
     body {
-        line-height: 1;
+        color: var(--primaryColor);
+        display: grid;
+        font: 1em/1.5 Lato, sans-serif;
+        gap: 2em;
+        grid-template-columns:
+    [full-start]
+    1fr
+    [main-start side-start]
+    minmax(min-content, 12em)
+    [side-end content-start]
+    minmax(min-content, 36em)
+    [main-end content-end]
+    1fr
+    [full-end];
+        grid-template-rows: auto [content] 0;
+        margin-bottom: 4em;
     }
-    ol, ul {
-        list-style: none;
-    }
-    blockquote, q {
-        quotes: none;
-    }
-    blockquote:before, blockquote:after,
-    q:before, q:after {
+
+    body::before {
         content: '';
-        content: none;
-    }
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-    /* Custom reset */
-    .main-summary p,
-    #publications .item,
-    #skills .item,
-    #languages .item,
-    #references .item,
-    #interests .item{
-        margin: 0;
+        grid-column: full;
+        grid-row: content;
     }
 
-
-    /****************
-    *		SMARTPHONES
-    ****************/
-    em {
-        color: #757575;
-    }
-    p {
-        margin: 1em 0;
-    }
-    blockquote {
-        margin: 0;
-        margin-bottom: 1em;
-    }
-    strong {
-        font-weight: 700;
-        font-size: 1.1em;
-    }
+    ol,
     ul {
-        margin-top: 1em;
-    }
-    div.item {
-        margin: 1em 0 2em;
-        padding-bottom: 2em;
-    }
-    div.item:last-of-type {
-        margin: 0;
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-    p {
-        text-align: justify;
+        padding-left: 1em;
     }
 
+    li + li {
+        margin-top: 0.2em;
+    }
 
-    /* Headers */
-    h1, h2, h3, h4, h5, h6 {
-        font-weight: 700;
+    li::marker {
+        color: var(--mutedColor);
     }
-    h1 {
-        font-size: 2.5rem;
+
+    a {
+        color: var(--linkColor);
+        text-decoration: none;
+        transition: color 0.2s;
     }
+
+    a:focus,
+    a:hover {
+        color: var(--accentColor);
+    }
+
+    h1,
+    h2,
+    h3,
+    h5 {
+        font-weight: normal;
+    }
+
+    h1,
     h2,
     h3 {
-        font-size: 1rem;
-    }
-    a {
-        color: #EB5F51;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
+        line-height: 1.2;
     }
 
-    /* Layout */
-    body {
-        background: #f2f2f2;
-        line-height: 1.6;
-        font-size: 13px;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    h1 {
+        font-size: var(--scale5);
     }
 
-    #resume {
-        padding: 1rem 0;
-        margin: 1rem auto;
+    h2 {
+        color: var(--secondaryColor);
+        font-size: var(--scale4);
     }
 
-    #header {
-        padding: 0 1em;
-        margin-bottom: 1em;
+    h3 {
+        color: var(--accentColor);
+        font-size: var(--scale3);
+        grid-column: side;
+        margin-bottom: 1rem;
     }
 
-    #resume > header div {
-        display: table;
-        padding-left: 0.5em;
+    h4 {
+        font-size: var(--scale2);
     }
 
-    #resume > header div.middle {
-        padding-top: 1.5em;
+    h5 {
+        font-size: var(--scale1);
     }
 
-    header img {
-        display: block;
-        width: 10em;
-        border-radius: 0.275em;
-        float: right;
+    h6 {
+        font-size: var(--scale0);
     }
 
-    header .name {
-        line-height: 1;
-    }
-
-    header .label {
-        font-size: 1.5rem;
-        font-weight: 400;
-        color: #757575;
-    }
-
-    section:not(.section) {
-        padding: .5em 1rem;
-    }
-
-    section#references {
-        border-bottom:none;
-    }
-
-    section#basics {
-        background: inherit;
-        margin-bottom: 0;
-    }
-
-    section#skills {
-        padding-bottom: 0;
-    }
-
-    section#education,
-    section#work,
-    .main-summary section {
-        padding-bottom: 1em;
-    }
-
-    header::after {
-        display: table;
-        content: " ";
-        clear: both;
-    }
-
-    h2.section-title {
-        text-align: left;
-        font-size: 1rem;
-        font-weight: 400;
-        color: #757575;
-        padding: 1em 1rem 0;
-        margin-bottom: 0.1275em;
-    }
-
-    .date {
-        font-weight: 700;
-        color: #757575;
-    }
-
-    .position, .area, .institution {
-        font-weight: 700;
-    }
-
-    #interests .item, #languages .item {
-        padding: 0 1em 1em 0;
-        border-bottom: none;
-    }
-
-    .website::before {
-        display: inline-block;
-        font: normal normal normal 14px/1 FontAwesome;
-        font-size: inherit;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-decoration: none;
-        min-width: 1.25em;
-        margin-right: 0.25em;
-        text-align: center;
-        content: '\f14c';
-    }
-
-    #profiles, #skills, #interests, #languages {
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-flow: row wrap;
-        flex-flow: row wrap;
-        -webkit-justify-content: flex-start;
-        justify-content: flex-start;
-        padding-bottom: 1em;
-    }
-
-    #profiles, #location {
-        box-shadow: none;
-        padding: 0;
-    }
-
-    #profiles .item {
-        margin: 0;
-        padding: 0;
-        padding-right: 1em;
-        border-bottom: none;
-    }
-
-    #interests ul {
-        margin-top: 0.5em;
-    }
-
-    #publications .name {
-        font-style: italic;
-    }
-
-    .courses li, .keywords li{
-        display: inline-block;
-        background: #f0f0f0;
-        font-size: 0.9em;
-        line-height: 1;
-        color: #333;
-        padding: 0.4em 0.8em;
-        border-bottom: 1px solid #ddd;
-        border-right: 1px solid #ddd;
-        border-radius: 3px;
-    }
-
-    #publications .date {
-        font-weight: normal;
-        color: #000;
-    }
-
-    #skills .item {
-        min-width: 15em;
-        padding: 0 .5em .8em 0;
-        border-bottom: none;
-    }
-
-
-    /* Skills chart */
-    #skills .level .bar {
-        border: 1px solid #ddd;
-        display: block;
-        width: 10em;
-        height: 5px;
-        margin: 0em 0 1em 0;
-        position: relative;
-    }
-
-    #skills .level .bar::after {
-        position: absolute;
-        content: " ";
-        top: 0;
-        left: 0;
-        background: black;
-        height: 5px;
-    }
-
-    #skills .level.beginner .bar::after {
-        background: #EB5F51;
-        width: 2.5em;
-    }
-
-    #skills .level.intermediate .bar::after {
-        background: #ffdf1f;
-        width: 5em;
-    }
-
-    #skills .level.advanced .bar::after {
-        background: #59C596;
-        width: 7.5em;
-    }
-
-    #skills .level.master .bar::after {
-        background: #5CB85C;
-        width: 10em;
-    }
-
-    #references .item {
+    blockquote {
+        border-left: 0.2em solid var(--mutedColor);
         padding-left: 1em;
-        border-left: 5px solid #EB5F51;
     }
 
-    .fa.social {
-        margin-right: 0.25em;
-        font-size: 1.1em;
+    cite {
+        color: var(--secondaryColor);
+        font-style: inherit;
     }
 
-    /* Social Media Brand Colors */
-    .google-plus {
-        color: #dd4b39;
+    cite::before {
+        content: '— ';
     }
 
-    .tumblr {
-        color:#32506d;
+    .masthead {
+        background: var(--mutedColor);
+        display: inherit;
+        gap: inherit;
+        grid-column: full;
+        grid-template-columns: inherit;
+        padding: 4em 0;
+        row-gap: 0;
     }
 
-    .foursquare {
-        color:  #0072b1;
+    .masthead > *,
+    section {
+        grid-column: main;
     }
 
-    .facebook {
-        color: #3b5998;
+    article > * + *,
+    blockquote > * + * {
+        margin-top: 0.6em;
     }
 
-    .linkedin {
-        color: #007bb6;
+    .stack {
+        display: grid;
+        gap: 1.5em;
     }
 
-    .pinterest {
-        color: #cb2027;
+    .grid-list {
+        display: grid;
+        gap: 1em;
     }
 
-    .dribbble {
-        color: #ea4c89;
+    .spaced-list {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
-    .instagram {
-        color: #517fa4;
+    .spaced-list:first-child::before {
+        border-bottom: 1px solid var(--mutedColor);
+        content: '';
+        flex-grow: 1;
+        margin: 0 1em;
+        order: 1;
     }
 
-    .twitter {
-        color: #00aced;
+    .spaced-list > :nth-child(2) {
+        order: 2;
     }
 
-    .soundcloud {
-        color: #ff3a00;
+    .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding: 0;
     }
 
-    .wordpress {
-        color: #21759b;
+    .tag-list > li {
+        background: var(--mutedColor);
+        margin: 0 0.2em 0.2em 0;
+        padding: 0.2em 0.6em;
     }
 
-    .youtube {
-        color: #bb0000;
-    }
-
-    .github {
-        color: #171515;
-    }
-
-    .stack-overflow {
-        color: #828386;
-        position: relative;
-    }
-
-    .flickr {
-        color: #ff0084;
-    }
-
-    .stack-overflow::after {
-        position: absolute;
-        left: 0;
-        content: '\f16c';
-        color: #f68a1f;
-        overflow: hidden;
-        height: 40%;
-    }
-
-    /******************
-    *		HELPER CLASSES
-    ******************/
-    .fa {
-        min-width: 1.25em;
-        margin-right: 0.25em;
-        text-align: center;
-    }
-
-    .clear {
-        display: table;
-        clear: both;
-    }
-
-
-    /****************
-    *		TABLET
-    ****************/
-    @media screen and (min-width: 602px) {
-
-        #resume {
-            width: 550px;
-            margin: 0 auto;
-        }
-        section > header > h3 {
-            float:left;
-        }
-        section > header > .date {
-            float: right;
-            line-height: 1.3;
+    @media print, (min-width: 48em) {
+        h3 {
+            text-align: right;
+            margin-bottom: inherit;
         }
 
+        .masthead > *,
+        section {
+            grid-column: content;
+        }
+
+        section {
+            display: contents;
+        }
+
+        .grid-list {
+            grid-template-columns: 1fr 1fr;
+        }
     }
-
-
-    /****************
-    *		LAPTOP
-    ****************/
-    @media screen and (min-width: 1025px) {
-
-        #resume {
-            width: 650px;
-            padding: 3em;
-            margin: 3em auto;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-        }
-
-        .section {
-            display: -webkit-box;
-            display: -moz-box;
-            display: -ms-flexbox;
-            display: -webkit-flex;
-            display: flex;
-            -webkit-flex-flow: row wrap;
-            flex-flow: row wrap;
-            -webkit-justify-content: space-between;
-            justify-content: space-between;
-            margin-bottom: 1em;
-            margin-top: 1em;
-            border-bottom: 1px solid #eee;
-        }
-
-        .section:last-of-type {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        section > header {
-            line-height: 1;
-            padding-bottom: 1em;
-        }
-
-        h2.section-title {
-            line-height: 1.1;
-            padding-top: 0;
-        }
-
-        section:not(.section) {
-            width: 34.5em;
-            padding: 0 1em 1em 0;
-            margin-top:0;
-            border: none;
-        }
-
-        section p {
-            margin: 0;
-        }
-
-        section#basics {
-            width: auto;
-            padding-top: 1em;
-            padding-left: 1em;
-            padding-bottom: 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
-
-        #profiles .item{
-            padding-bottom: 1em;
-        }
-
-        div {
-            padding: 0;
-        }
-
-        #skills .item {
-            padding-left:0;
-            margin-top: 0;
-        }
-
-        div.item {
-            margin-top: 0;
-            border-bottom: 1px solid #eee;
-        }
-
-    }
-
-</style>
-
-
-<body><script id="__bs_script__">//<![CDATA[
-document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.27.5'><\/script>".replace("HOST", location.hostname));
-//]]></script>
-
-<div id="resume">
-    <header id="header">
+    </style>
+</head>
+<body>
+<header class="masthead">
+    <h1>Dann Stockton</h1>
+    <h2>Software Engineer</h2>
+</header>
+<section id="contact">
+    <h3>Contact</h3>
+    <div class="grid-list">
         <div>
-            <h1 class="name">Dann Stockton</h1>
-            <h2 class="label">Software Engineer</h2>
+            <h4>Email</h4>
+            <a href="mailto:dannstockton@gmail.com">dannstockton@gmail.com</a>
         </div>
-
-    </header>
-
-    <section id="basics">
-
-
-        <div id="contact">
-            <div class="website">
-                <a href="https://dannstockton.com">https://dannstockton.com</a>
-            </div>
-            <div class="email">
-                <span class="fa fa-envelope"></span>
-                <a href="mailto:dannstockton@gmail.com">dannstockton@gmail.com</a>
-            </div>
-            <div class="phone">
-                <span class="fa fa-phone-square"></span>
-                Upon Request
-            </div>
+        <div>
+            <h4>Phone</h4>
+            303-304-9186
         </div>
-
-
-        <div id="profiles">
-            <div class="item">
-                <span class="network fa fa-github github"></span>
-                <span class="username">
-								<span class="url">
-									<a href="https://github.com/stringerbell">stringerbell</a>
-								</span>
-							</span>
-            </div>
+    </div>
+</section>
+<section id="about">
+    <h3>About</h3>
+    <article>
+        <p>Results-driven software engineer with 10 years of experience. Proven track record of designing and implementing scalable solutions in the payments space. Seeking opportunities to leverage technical expertise and leadership skills to drive innovation and deliver impactful solutions in a dynamic team environment.</p>
+    </article>
+</section>
+<section id="profiles">
+    <h3>Profiles</h3>
+    <div class="grid-list">
+        <div>
+            <h4>github</h4>
+            <a href="https://github.com/stringerbell">stringerbell</a>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="section main-summary">
-        <h2 class='section-title'>About</h2>
-        <section>
-            <p>10 years of experience building full-stack, real-world, product focused, web and mobile applications and tools to help increase revenue and decrease expenses.</p>
-        </section>
-    </section>
-
-    <section class="section">
-        <h2 class='section-title'>Experience</h2>
-        <section id="work">
+<section id="work">
+    <h3>Work</h3>
+    <div class="stack">
+        <article>
             <header>
-                <h3 class="name">
-                    Subsplash
-                </h3>
-                <div class="date">
-								<span class="startDate">
-									July 2019
-								</span>
-                    <span class="endDate">
-									- Present
-								</span>
+                <div class="spaced-list">
+                    <h4>Subsplash</h4>
+                    <span>
+                    <time datetime="2019-07-22">Jul 2019</time> –
+                    Present
+                  </span>
+                </div>
+                <div class="spaced-list">
+                    <strong>Staff Software Engineer (Technical Lead)</strong>
                 </div>
             </header>
-            <div class="item">
-                <div class="position">
-                  Staff Software Engineer (Technical Lead)
-                </div>
-                <div class="website">
-                    <a href="https://subsplash.com">https://subsplash.com</a>
-                </div>
-                <div class="summary">
-                    <p>Payments team</p>
-                </div>
-                <ul class="highlights">
-                    <li>• Supported the platform during high growth. ~10x growth in ~2 years.</li>
-                    <li>• Led the projects for shipping Stripe KYC</li>
-                    <li>• Migrated lots of legacy PHP software to Golang microservices while shipping new features to help increase stability without downtime</li>
-                    <li>• Served as a Technical Lead for a team of 3-6 engineers</li>
-                    <li>• Reduced complexity, increased reliability, and visibility for customer signup process by using Step Functions</li>
-                    <li>• Helped build customer onboarding process to increase revenue, and reduce customer churn.</li>
-                    <li>• Upgraded legacy PHP 5.6 applications to PHP 7+</li>
-                    <li>• Used golang to help increase system reliability and code maintainability</li>
-                    <li>• Helped increase stability on legacy customer-facing integration application</li>
-                </ul>
-            </div>
+            <p>Payments team</p>
+            <h5>Highlights</h5>
+            <ul>
+                <li>Led the payments team through explosive, COVID-fueled growth. Approximately 10x over two years. Now processing ~$2BB/year.</li>
+                <li>Led the project to integrate with Stripe Treasury resulting in increased revenue.</li>
+                <li>Part of an on-call rotation</li>
+                <li>Served as the Technical Lead for a dedicated team of 3-6 engineers, providing strategic guidance and technical oversight to ensure project success and team cohesion.</li>
+                <li>Provided mentorship and guidance to junior developers, imparting best practices and fostering skill development in writing valuable tests, simplifying logic, reducing conditionals, and addressing security vulnerabilities, thereby contributing to their professional growth and the overall success of the team.</li>
+                <li>Implemented many high-impact features to help increase revenue, and maintainability, and decrease fraud.</li>
+                <li>Migrated critical payment systems away from legacy PHP software to maintainable Golang microservices, with zero downtime.</li>
+                <li>Used metrics to streamline the customer signup process by leveraging Step Functions/FSM, which drastically reduced complexity, increased reliability, and improved observability, ultimately elevating the overall user experience.</li>
+            </ul>
+        </article>
+        <article>
             <header>
-                <h3 class="name">
-                    i3logix
-                </h3>
-                <div class="date">
-								<span class="startDate">
-									January 2016
-								</span>
-                    <span class="endDate">
-									- July 2019
-								</span>
+                <div class="spaced-list">
+                    <h4>i3logix</h4>
+                    <span>
+                    <time datetime="2016-01-04">Jan 2016</time> –
+                    <time datetime="2019-07-01">Jun 2019</time>
+                  </span>
+                </div>
+                <div class="spaced-list">
+                    <strong>Sr. Software Engineer (Team/Technical Lead)</strong>
                 </div>
             </header>
-            <div class="item">
-                <div class="position">
-                    Sr. Software Engineer (Team/Technical Lead)
-                </div>
-                <div class="website">
-                    <a href="https://ballottrax.com">https://ballottrax.com</a>
-                </div>
-                <div class="summary">
-                    <p>Mail-in ballot tracking, developer workflow automation.</p>
-                </div>
-                <ul class="highlights">
-                    <li>• Started out as a &#x27;Software Developer&#x27;, received promotion after six months to &#x27;Software Engineer&#x27;. Received another promotion to &#x27;Senior Software Engineer&#x27;</li>
-                    <li>• Led three engineers for ballottrax</li>
-                    <li>• Led the project to build a native iOS app (Swift 3, 4, a little bit of React Native)</li>
-                    <li>• Reduced complexity of UI by implementing a FSM</li>
-                    <li>• Mentored junior developers on best practices, helping them write valuable tests, simplify logic, and decrease conditionals</li>
-                    <li>• Led the project to automate tedious developer workflows, implement various business processes, and connect various services together using Slack as a CLI. (Like an internal IFTTT)</li>
-                    <li>• Developed custom 30+ Slack slash commands: /auto_merge, /whynotmerge, /rebase, /mailgun, /twilio, /chipotle, /jenkins, /jira, /scrum</li>
-                    <li>• Built a rebase button workflow</li>
-                    <li>• Built in Zend Framework 2-3, Apigility, Zend Expressive 1-3 using PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, Centos</li>
-                </ul>
-            </div>
+            <p>Mail-in ballot tracking, developer workflow automation.</p>
+            <h5>Highlights</h5>
+            <ul>
+                <li>Progressed from a Software Developer role to Software Engineer within six months, subsequently advancing to Senior Software Engineer, demonstrating consistent growth and contributions to the organization.</li>
+                <li>Led a team of three engineers for the development of Ballottrax, demonstrating leadership and project management skills in delivering successful outcomes.</li>
+                <li>Spearheaded the creation of a native iOS app using Swift 3 and 4, supplemented with React Native elements, showcasing versatility in mobile app development.</li>
+                <li>Simplified user interface complexity by implementing a Finite State Machine (FSM), resulting in improved usability and user experience.</li>
+                <li>Directed a project to automate developer workflows, streamline business processes, and integrate various services using Slack as a Command-Line Interface (CLI), akin to an internal IFTTT platform.</li>
+                <li>Developed over 30 custom Slack slash commands including /auto_merge, /whynotmerge, /rebase, /mailgun, and /twilio, among others, facilitating seamless communication and task automation within the team.</li>
+                <li>Engineered a rebase button workflow, streamlining version control processes and enhancing developer efficiency.</li>
+                <li>Proficiently utilized a tech stack comprising Zend Framework 2-3, Apigility, Zend Expressive 1-3, PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, and CentOS to build robust and scalable applications, showcasing expertise across various technologies and platforms.</li>
+            </ul>
+        </article>
+        <article>
             <header>
-                <h3 class="name">
-                    Subsplash
-                </h3>
-                <div class="date">
-								<span class="startDate">
-									February 2014
-								</span>
-                    <span class="endDate">
-									- January 2016
-								</span>
+                <div class="spaced-list">
+                    <h4>Subsplash</h4>
+                    <span>
+                    <time datetime="2014-02-01">Jan 2014</time> –
+                    <time datetime="2016-01-01">Dec 2015</time>
+                  </span>
+                </div>
+                <div class="spaced-list">
+                    <strong>Web Developer</strong>
                 </div>
             </header>
-            <div class="item">
-                <div class="position">
-                    Web Developer
-                </div>
-                <div class="website">
-                    <a href="https://subsplash.com">https://subsplash.com</a>
-                </div>
-                <div class="summary">
-                    <p>Turnkey apps/content management for churches & non-profits</p>
-                </div>
-                <ul class="highlights">
-                    <li>• Led the effort to migrate payment processing to Stripe, implemented and automated a customer sign-up/account creation/follow-up process using webhooks, along with analytics, reporting, and data processing for the finance team</li>
-                    <li>• Automated front-end process improvements by creating gulp.js build scripts (semantic sprites, LESS/CSS/JS minification, image optimization, live reload)</li>
-                    <li>• Parallelized push notification work using async workers/DB queues</li>
-                    <li>• Built API to enable podcasting</li>
-                    <li>• Built a custom RSS/Atom parser for a &quot;reader&quot; project</li>
-                    <li>• Helped build &quot;web player&quot; product from the ground up, implemented &quot;auto-resume&quot; feature</li>
-                    <li>• Overhauled legacy iCal parser, implemented sabre-vobject library</li>
-                    <li>• Used imagick library to automate image processing/manipulation (primary color, image montage, promo widget)</li>
-                </ul>
-            </div>
+            <p>Turnkey apps/content management for churches &amp; non-profits</p>
+            <h5>Highlights</h5>
+            <ul>
+                <li>Orchestrated the migration of payment processing systems to Stripe, spearheading the implementation and automation of a comprehensive customer sign-up and account creation process utilizing webhooks. Additionally, established analytics, reporting, and data processing functionalities to streamline financial operations.</li>
+                <li>Automated front-end process enhancements by developing gulp.js build scripts, incorporating features such as semantic sprites, LESS/CSS/JS minification, image optimization, and live reload, resulting in improved development efficiency and enhanced user experience.</li>
+                <li>Enhanced push notification functionality by parallelizing tasks using asynchronous workers and queues, significantly improving performance and scalability of the system.</li>
+                <li>Engineered a custom RSS/Atom parser for a reader project, enabling efficient parsing and organization of syndicated content for enhanced user engagement.</li>
+                <li>Built an in-house image manipulation library to automate previously error-prone and manual image processing and manipulation tasks, including primary color extraction, image montage creation, and promo widget generation, streamlining content creation processes, enhancing visual appeal and reducing toil</li>
+            </ul>
+        </article>
+        <article>
             <header>
-                <h3 class="name">
-                    Kicksender
-                </h3>
-                <div class="date">
-								<span class="startDate">
-									August 2013
-								</span>
-                    <span class="endDate">
-									- August 2014
-								</span>
+                <div class="spaced-list">
+                    <h4>Kicksender</h4>
+                    <span>
+                    <time datetime="2013-08-01">Jul 2013</time> –
+                    <time datetime="2014-08-01">Jul 2014</time>
+                  </span>
+                </div>
+                <div class="spaced-list">
+                    <strong>Founder</strong>
                 </div>
             </header>
-            <div class="item">
-                <div class="position">
-                    Founder
-                </div>
-                <div class="summary">
-                    <p>Digital Order Fulfillment for artists after their kickstarter project ends</p>
-                </div>
-                <ul class="highlights">
-                    <li>• Built it to offer digital fulfillment for crowd-funded projects, automating the pain of sending out lots of digital assets to lots of people reliably with a full set of features</li>
-                    <li>• Built in Zend Framework 1 using PHP5-FPM 5.5, MySQL, HTML5, JS, AJAX, ZMQ, Vagrant, Nginx, Ubuntu</li>
-                </ul>
-            </div>
+            <p>Digital Order Fulfillment for artists after their kickstarter project ends</p>
+            <h5>Highlights</h5>
+            <ul>
+                <li>• Built it to offer digital fulfillment for crowd-funded projects, automating the pain of sending out lots of digital assets to lots of people reliably with a full set of features</li>
+                <li>• Built in Zend Framework 1 using PHP5-FPM 5.5, MySQL, HTML5, JS, AJAX, ZMQ, Vagrant, Nginx, Ubuntu</li>
+            </ul>
+        </article>
+        <article>
             <header>
-                <h3 class="name">
-                    Tifah LLC
-                </h3>
-                <div class="date">
-								<span class="startDate">
-									March 2005
-								</span>
-                    <span class="endDate">
-									- August 2013
-								</span>
+                <div class="spaced-list">
+                    <h4>Tifah LLC</h4>
+                    <span>
+                    <time datetime="2005-03-01">Feb 2005</time> –
+                    <time datetime="2013-08-01">Jul 2013</time>
+                  </span>
+                </div>
+                <div class="spaced-list">
+                    <strong>Co-Founder</strong>
                 </div>
             </header>
-            <div class="item">
-                <div class="position">
-                    Co-Founder
+            <p>Touring Musician</p>
+            <h5>Highlights</h5>
+            <ul>
+                <li>• Implemented, managed, maintained Website/Marketing/Content Strategy</li>
+                <li>• Helped grow our email list from 0-60,000 with various marketing strategies</li>
+                <li>• Launched, built and maintained the system and server to facilitate giving away 226K albums in the span of a month (March, 2013)</li>
+                <li>• Built automated incentive system for users to tweet/like/send an email in exchange for a download</li>
+                <li>• Built logistical tool for tour management and ticket sales</li>
+                <li>• Built complete ticketing system, and date/show manager on top of Google Calendar and Stripe</li>
+                <li>• Built internal CRM tools to improve customer experience</li>
+            </ul>
+        </article>
+    </div>
+</section>
+<section id="publications">
+    <h3>Publications</h3>
+    <div class="stack">
+        <article>
+            <header>
+                <div class="spaced-list">
+                    <h4>99 Bottles of OOP (PHP Version)</h4>
+                    <time datetime="2019">Dec 2018</time>
                 </div>
-                <div class="summary">
-                    <p>Touring Musician</p>
+                <div class="spaced-list">
+                    <span>
+                      Published by <strong>https://sandimetz.com/99bottles</strong>
+                    </span>
+                    <a href="https://sandimetz.dpdcart.com/">sandimetz.dpdcart.com</a>
                 </div>
-                <ul class="highlights">
-                    <li>• Implemented, managed, maintained Website/Marketing/Content Strategy</li>
-                    <li>• Helped grow our email list from 0-60,000 with various marketing strategies</li>
-                    <li>• Launched, built and maintained the system and server to facilitate giving away 226K albums in the span of a month (March, 2013)</li>
-                    <li>• Built automated incentive system for users to tweet/like/send an email in exchange for a download</li>
-                    <li>• Built logistical tool for tour management and ticket sales</li>
-                    <li>• Built complete ticketing system, and date/show manager on top of Google Calendar and Stripe</li>
-                    <li>• Built internal CRM tools to improve customer experience</li>
-                </ul>
-            </div>
-        </section>
-    </section>
-
-
-
-
-
-    <section class="section">
-        <h2 class='section-title'>Publications</h2>
-        <section id="publications">
-            <div class="item">
-								<span class="name">
-										99 Bottles of OOP (PHP Version)
-								</span>
-                <span class="publisher">
-										in <a href="https://www.sandimetz.com/99bottles">https://www.sandimetz.com/99bottles</a>
-									</span>
-                <span class="date">
-										1 January 2019
-									</span>
-                <div class="summary">
-                    <p>99 Bottles of OOP is a practical guide to writing cost-effective, maintainable, and pleasing object-oriented code.</p>
-                </div>
-            </div>
-        </section>
-    </section>
-
-    <section class="section">
-        <h2 class='section-title'>Skills</h2>
-        <section id="skills">
-            <div class="item">
-                <div class="name">
-                    Web Development
-                </div>
-                <ul class="keywords">
-                  <li>git</li>
-                  <li>Golang</li>
-                  <li>Docker</li>
-                  <li>Kubernetes</li>
-                  <li>Javascript</li>
-                  <li>React</li>
-                  <li>PHP</li>
-                  <li>Composer</li>
-                  <li>PHPUnit</li>
-                  <li>PHPSpec</li>
-                  <li>Behat/Gherkin</li>
-                  <li>ZF 1, 2, 3</li>
-                  <li>Expressive 1, 2, 3</li>
-                  <li>Swift</li>
-                  <li>Redux</li>
-                  <li>Statecharts</li>
-                  <li>Jest</li>
-                  <li>Ruby</li>
-                  <li>RSpec</li>
-                  <li>Watir</li>
-                  <li>CSS</li>
-                  <li>Jekyll</li>
-                  <li>Gulp</li>
-                  <li>Mercurial</li>
-                  <li>RabbitM</li>
-                </ul>
-            </div>
-            <div class="item">
-                <div class="name">
-                    APIs
-                </div>
-                <ul class="keywords">
-                    <li>Stripe</li>
-                    <li>Amazon Web Services</li>
-                    <li>Slack</li>
-                    <li>Twilio</li>
-                    <li>Mailgun</li>
-                    <li>Twitter</li>
-                    <li>Facebook</li>
-                    <li>Bitbucket</li>
-                    <li>Jira</li>
-                    <li>Github</li>
-                    <li>Zendesk</li>
-                    <li>ZMQ</li>
-                    <li>Google Calendar</li>
-                    <li>RabbitMQ</li>
-                    <li>Mandrill</li>
-                    <li>Jenkin</li>
-                </ul>
-            </div>
-        </section>
-    </section>
-</div>
+            </header>
+            <p>99 Bottles of OOP is a practical guide to writing cost-effective, maintainable, and pleasing object-oriented code.</p>
+        </article>
+    </div>
+</section>
+<section id="skills">
+    <h3>Skills</h3>
+    <div class="grid-list">
+        <div>
+            <h4>Web Development</h4>
+            <ul class="tag-list">
+                <li>git</li>
+                <li>Golang</li>
+                <li>Docker</li>
+                <li>Kubernetes</li>
+                <li>Javascript</li>
+                <li>React</li>
+                <li>PHP</li>
+                <li>Composer</li>
+                <li>PHPUnit</li>
+                <li>Behat/Gherkin</li>
+                <li>Swift</li>
+                <li>Redux</li>
+                <li>Statecharts</li>
+                <li>CSS</li>
+            </ul>
+        </div>
+        <div>
+            <h4>APIs</h4>
+            <ul class="tag-list">
+                <li>Stripe</li>
+                <li>AWS</li>
+                <li>Slack</li>
+                <li>Twilio</li>
+                <li>Mailgun</li>
+                <li>Twitter</li>
+                <li>Bitbucket</li>
+                <li>Jira</li>
+                <li>Github</li>
+                <li>ZMQ</li>
+                <li>RabbitMQ</li>
+                <li>Jenkins</li>
+            </ul>
+        </div>
+    </div>
+</section>
 </body>
-
 </html>
