@@ -6,7 +6,7 @@ RESUME_HTML := static/resume/index.html
 RESUME_PDF  := static/resume.pdf
 CHROME      ?= /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
-.PHONY: help serve build check clean new-post new-page new-gallery resume resume-pdf publish pages-setup
+.PHONY: help serve build check clean new-post new-page new-gallery resume resume-pdf publish pages-setup pages-https
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -60,6 +60,13 @@ publish: check ## Commit everything and push; GitHub Actions builds + deploys to
 	git commit -m "$(if $(msg),$(msg),Publish $(DATE))" || true
 	git push origin main
 
-pages-setup: ## One-time: tell GitHub Pages to deploy from the Actions workflow instead of the branch
-	gh api -X PUT repos/$(REPO)/pages -f build_type=workflow
-	@echo "-> GitHub Pages now deploys from .github/workflows/deploy.yml"
+DOMAIN ?= dannstockton.com
+
+pages-setup: ## One-time: tell GitHub Pages to deploy from the Actions workflow (keeps the custom domain)
+	gh api -X PUT repos/$(REPO)/pages -f build_type=workflow -f cname=$(DOMAIN)
+	@echo "-> GitHub Pages now deploys from .github/workflows/deploy.yml, serving $(DOMAIN)"
+	@echo "-> once GitHub has issued the TLS cert (a few minutes), run: make pages-https"
+
+pages-https: ## Turn on 'Enforce HTTPS' for the custom domain (fails until GitHub has issued the cert)
+	gh api -X PUT repos/$(REPO)/pages -F https_enforced=true
+	gh api repos/$(REPO)/pages --jq '{cname, https_enforced, status}'
