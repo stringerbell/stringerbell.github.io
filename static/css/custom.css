@@ -2,3 +2,7 @@ h6 {
     font-size: 0.2em;
 }
 
+
+/* Project screenshots in posts */
+.entry-content li figure { margin: 0.75em 0 1.5em; }
+.entry-content li figure img { border: 1px solid #ddd; border-radius: 6px; display: block; }
