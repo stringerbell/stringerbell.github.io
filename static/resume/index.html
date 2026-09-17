@@ -1,444 +1,263 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
+<!doctype html>
+    <html lang="en" style="">
+      <head>
+        <meta charset="utf-8" />
+        
     <title>Dann Stockton</title>
-    <meta name="description" content="Results-driven software engineer with 10 years of experience. Proven track record of designing and implementing scalable solutions in the payments space. Seeking opportunities to leverage technical expertise and leadership skills to drive innovation and deliver impactful solutions in a dynamic team environment.">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap">
-    <style>:root {
-        /* Colors */
-        --primaryColor: #212529;
-        --secondaryColor: #95a5a6;
-        --accentColor: #f1c40f;
-        --linkColor: #2ecc71;
-        --mutedColor: #f4f6f6;
+    <meta name="description" content="Technical leader with deep expertise in building and scaling payment systems, currently processing $2B+ annually. Proven track record of transforming legacy architectures into modern microservices while leading high-performing engineering teams. Known for reducing system complexity through elegant solutions and cultivating strong engineering cultures through mentorship. Brings unique perspective from founding successful digital ventures and navigating explosive growth phases." />
+  
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap" />
+        <style>
+          :root{color-scheme:light dark;--color-background-light: #ffffff;--color-dimmed-light: #f3f4f5;--color-primary-light: #191e23;--color-secondary-light: #6c7781;--color-accent-light: #0073aa;--color-background-dark: #191e23;--color-dimmed-dark: #23282d;--color-primary-dark: #fbfbfc;--color-secondary-dark: #ccd0d4;--color-accent-dark: #00a0d2;--color-background: var(--color-background-light);--color-dimmed: var(--color-dimmed-light);--color-primary: var(--color-primary-light);--color-secondary: var(--color-secondary-light);--color-accent: var(--color-accent-light);--scale-ratio: 1.25;--scale0: 1rem;--scale1: calc(var(--scale0) * var(--scale-ratio));--scale2: calc(var(--scale1) * var(--scale-ratio));--scale3: calc(var(--scale2) * var(--scale-ratio));--scale4: calc(var(--scale3) * var(--scale-ratio));--scale5: calc(var(--scale4) * var(--scale-ratio))}@media (prefers-color-scheme: dark){:root{--color-background: var(--color-background-dark);--color-dimmed: var(--color-dimmed-dark);--color-primary: var(--color-primary-dark);--color-secondary: var(--color-secondary-dark);--color-accent: var(--color-accent-dark)}}*{box-sizing:border-box;margin:0;padding:0}html{font-size:14px}body{background:var(--color-background);color:var(--color-primary);display:grid;font:1em/1.5 Lato,sans-serif;gap:2em;grid-template-columns:[full-start] 1fr [main-start side-start] minmax(min-content,12em) [side-end content-start] minmax(min-content,36em) [main-end content-end] 1fr [full-end];grid-template-rows:auto [content] 0;margin-bottom:4em}body:before{content:"";grid-column:full;grid-row:content}ol,ul{padding-left:1em}:not(.icon-list,.tag-list)>li+li{margin-top:.4em}li::marker,.network{color:var(--color-secondary)}a{color:var(--color-accent);text-decoration:none}a:focus,a:hover{text-decoration:underline}h1,h2,h3,h5{font-weight:400}h1,h2,h3{line-height:1.2}h1{font-size:var(--scale5)}h2{color:var(--color-secondary);font-size:var(--scale4)}h3{color:var(--color-secondary);font-size:var(--scale3);grid-column:side;margin-bottom:1rem}h4{font-size:var(--scale2)}h5{font-size:var(--scale1)}h6{font-size:var(--scale0)}blockquote{border-left:.2em solid var(--color-dimmed);padding-left:1em}cite{color:var(--color-secondary);font-style:inherit}cite:before{content:"— "}svg{margin-right:.2em;vertical-align:text-bottom}.masthead{background:var(--color-dimmed);display:inherit;gap:inherit;grid-column:full;grid-template-columns:inherit;padding:4em 0;text-align:center}.masthead>*,section{grid-column:main}.masthead>img{border:4px solid;border-radius:50%;margin:0 auto;max-width:12em}article>*+*,blockquote>*+*,.timeline>div>*+*{margin-top:.6em}.meta{color:var(--color-secondary)}.stack{display:grid;gap:1.5em}.icon-list{display:flex;flex-wrap:wrap;gap:.4em 1em;justify-content:center;list-style:none;padding:0}.grid-list{display:grid;gap:1em}.tag-list{display:flex;flex-wrap:wrap;gap:.4em;list-style:none;padding:0}.tag-list>li{background:var(--color-dimmed);border-radius:.2em;padding:.2em .6em}.timeline>div{position:relative}.timeline>div:not(:last-child){padding-bottom:1rem}.timeline>div:not(:last-child):before{content:"";position:absolute;top:1rem;left:-15px;width:2px;height:100%;background:var(--color-secondary)}.timeline>div:not(:only-child):after{content:"";position:absolute;top:.6rem;left:-20px;width:8px;height:8px;background:var(--color-secondary);border:2px solid var(--color-background);border-radius:50%}@media print,(min-width: 48em){h3{text-align:right;margin-bottom:inherit}.masthead{text-align:inherit}.masthead>*,section{grid-column:content}.masthead img{grid-column:side;grid-row:span 2;max-width:100%}section{display:contents}.icon-list{flex-direction:column}.grid-list{grid-template-columns:repeat(auto-fit,minmax(calc((100% - 1em)/2),1fr))}}@media print{.duration{display:none}}
+        </style>
+        <script type="module">
+          const pluralize = (num, str) => `${num} ${num === 1 ? str : str.concat('s')}`
 
-        /* Typography */
-        --ratio: 1.25;
-        --scale0: 1rem;
-        --scale1: calc(var(--scale0) * var(--ratio));
-        --scale2: calc(var(--scale1) * var(--ratio));
-        --scale3: calc(var(--scale2) * var(--ratio));
-        --scale4: calc(var(--scale3) * var(--ratio));
-        --scale5: calc(var(--scale4) * var(--ratio));
-    }
+class TimeDuration extends HTMLElement {
+  connectedCallback() {
+    const [from, to] = this.querySelectorAll('time')
+    if (!from) return
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+    const startDate = new Date(from.dateTime || from.textContent)
+    const endDate = new Date(to ? to.dateTime || to.textContent : Date.now())
+    const diffDate = new Date(endDate - startDate)
 
-    html {
-        font-size: 14px;
-    }
+    const years = diffDate.getFullYear() - 1970
+    const months = diffDate.getMonth()
+    const days = diffDate.getDate() - 1
 
-    body {
-        color: var(--primaryColor);
-        display: grid;
-        font: 1em/1.5 Lato, sans-serif;
-        gap: 2em;
-        grid-template-columns:
-    [full-start]
-    1fr
-    [main-start side-start]
-    minmax(min-content, 12em)
-    [side-end content-start]
-    minmax(min-content, 36em)
-    [main-end content-end]
-    1fr
-    [full-end];
-        grid-template-rows: auto [content] 0;
-        margin-bottom: 4em;
-    }
+    const segments = [
+      years && pluralize(years, 'yr'),
+      months && pluralize(months, 'mo'),
+      days && !years && !months && pluralize(days, 'day'),
+    ].filter(Boolean)
+    if (!segments.length) return
 
-    body::before {
-        content: '';
-        grid-column: full;
-        grid-row: content;
-    }
+    const duration = document.createElement('time')
+    duration.classList.add('duration')
+    duration.textContent = '· '.concat(segments.join(' '))
 
-    ol,
-    ul {
-        padding-left: 1em;
-    }
+    this.append(' ', duration)
+  }
+}
 
-    li + li {
-        margin-top: 0.2em;
-    }
+customElements.define('time-duration', TimeDuration)
 
-    li::marker {
-        color: var(--mutedColor);
-    }
-
-    a {
-        color: var(--linkColor);
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-
-    a:focus,
-    a:hover {
-        color: var(--accentColor);
-    }
-
-    h1,
-    h2,
-    h3,
-    h5 {
-        font-weight: normal;
-    }
-
-    h1,
-    h2,
-    h3 {
-        line-height: 1.2;
-    }
-
-    h1 {
-        font-size: var(--scale5);
-    }
-
-    h2 {
-        color: var(--secondaryColor);
-        font-size: var(--scale4);
-    }
-
-    h3 {
-        color: var(--accentColor);
-        font-size: var(--scale3);
-        grid-column: side;
-        margin-bottom: 1rem;
-    }
-
-    h4 {
-        font-size: var(--scale2);
-    }
-
-    h5 {
-        font-size: var(--scale1);
-    }
-
-    h6 {
-        font-size: var(--scale0);
-    }
-
-    blockquote {
-        border-left: 0.2em solid var(--mutedColor);
-        padding-left: 1em;
-    }
-
-    cite {
-        color: var(--secondaryColor);
-        font-style: inherit;
-    }
-
-    cite::before {
-        content: '— ';
-    }
-
-    .masthead {
-        background: var(--mutedColor);
-        display: inherit;
-        gap: inherit;
-        grid-column: full;
-        grid-template-columns: inherit;
-        padding: 4em 0;
-        row-gap: 0;
-    }
-
-    .masthead > *,
-    section {
-        grid-column: main;
-    }
-
-    article > * + *,
-    blockquote > * + * {
-        margin-top: 0.6em;
-    }
-
-    .stack {
-        display: grid;
-        gap: 1.5em;
-    }
-
-    .grid-list {
-        display: grid;
-        gap: 1em;
-    }
-
-    .spaced-list {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .spaced-list:first-child::before {
-        border-bottom: 1px solid var(--mutedColor);
-        content: '';
-        flex-grow: 1;
-        margin: 0 1em;
-        order: 1;
-    }
-
-    .spaced-list > :nth-child(2) {
-        order: 2;
-    }
-
-    .tag-list {
-        display: flex;
-        flex-wrap: wrap;
-        list-style: none;
-        padding: 0;
-    }
-
-    .tag-list > li {
-        background: var(--mutedColor);
-        margin: 0 0.2em 0.2em 0;
-        padding: 0.2em 0.6em;
-    }
-
-    @media print, (min-width: 48em) {
-        h3 {
-            text-align: right;
-            margin-bottom: inherit;
-        }
-
-        .masthead > *,
-        section {
-            grid-column: content;
-        }
-
-        section {
-            display: contents;
-        }
-
-        .grid-list {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-    </style>
-</head>
-<body>
-<header class="masthead">
-    <h1>Dann Stockton</h1>
-    <h2>Software Engineer</h2>
-</header>
-<section id="contact">
-    <h3>Contact</h3>
-    <div class="grid-list">
-        <div>
-            <h4>Email</h4>
+        </script>
+      </head>
+      <body>
+        
+    <header class="masthead">
+      
+      <div><h1>Dann Stockton</h1> <h2>Software Engineer</h2></div>
+      <article><p>Technical leader with deep expertise in building and scaling payment systems, currently processing $2B+ annually. Proven track record of transforming legacy architectures into modern microservices while leading high-performing engineering teams. Known for reducing system complexity through elegant solutions and cultivating strong engineering cultures through mentorship. Brings unique perspective from founding successful digital ventures and navigating explosive growth phases.</p></article>
+      <ul class="icon-list">
+        
+        
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <a href="mailto:dannstockton@gmail.com">dannstockton@gmail.com</a>
+          </li>
+        
+        
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <a href="tel:303-304-9186">303-304-9186</a>
+          </li>
+        
+        
+        
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg> <a href="https://github.com/stringerbell">stringerbell</a>
+              <span class="network">(github)</span>
+            </li>
+          
+      </ul>
+    </header>
+   
+      <section id="work">
+        <h3>Work</h3>
+        <div class="stack">
+          
+              <article>
+                <header>
+                  <h4>Subsplash</h4>
+                  <div class="meta"></div>
+                </header>
+                <div class="timeline">
+                  
+                      <div>
+                        <div>
+                          <h5>Staff Software Engineer (Technical Lead)</h5>
+                          <div class="meta">
+                            <div><time-duration><time datetime="2019-07-22">Jul 2019</time> – Present</time-duration></div>
+                            
+                          </div>
+                        </div>
+                        <p>Payments team</p>
+                        
+                          <ul>
+                            <li><p>Led the payments team through explosive, COVID-fueled growth. Approximately 10x over two years. Now processing ~$2BB/year.</p></li><li><p>Led the project to integrate with Stripe Treasury resulting in increased revenue.</p></li><li><p>Part of an on-call rotation</p></li><li><p>Served as the Technical Lead for a dedicated team of 3-6 engineers, providing strategic guidance and technical oversight to ensure project success and team cohesion.</p></li><li><p>Provided mentorship and guidance to junior developers, imparting best practices and fostering skill development in writing valuable tests, simplifying logic, reducing conditionals, and addressing security vulnerabilities, thereby contributing to their professional growth and the overall success of the team.</p></li><li><p>Implemented many high-impact features to help increase revenue, and maintainability, and decrease fraud.</p></li><li><p>Migrated critical payment systems away from legacy PHP software to maintainable Golang microservices, with zero downtime.</p></li><li><p>Used metrics to streamline the customer signup process by leveraging Step Functions/FSM, which drastically reduced complexity, increased reliability, and improved observability, ultimately elevating the overall user experience.</p></li>
+                          </ul>
+                        
+                      </div>
+                    
+                </div>
+              </article>
+            
+              <article>
+                <header>
+                  <h4>i3logix</h4>
+                  <div class="meta"></div>
+                </header>
+                <div class="timeline">
+                  
+                      <div>
+                        <div>
+                          <h5>Sr. Software Engineer (Team/Technical Lead)</h5>
+                          <div class="meta">
+                            <div><time-duration><time datetime="2016-01-04">Jan 2016</time> – <time datetime="2019-07-01">Jul 2019</time></time-duration></div>
+                            
+                          </div>
+                        </div>
+                        <p>Mail-in ballot tracking, developer workflow automation.</p>
+                        
+                          <ul>
+                            <li><p>Progressed from a Software Developer role to Software Engineer within six months, subsequently advancing to Senior Software Engineer, demonstrating consistent growth and contributions to the organization.</p></li><li><p>Led a team of three engineers for the development of Ballottrax, demonstrating leadership and project management skills in delivering successful outcomes.</p></li><li><p>Spearheaded the creation of a native iOS app using Swift 3 and 4, supplemented with React Native elements, showcasing versatility in mobile app development.</p></li><li><p>Simplified user interface complexity by implementing a Finite State Machine (FSM), resulting in improved usability and user experience.</p></li><li><p>Directed a project to automate developer workflows, streamline business processes, and integrate various services using Slack as a Command-Line Interface (CLI), akin to an internal IFTTT platform.</p></li><li><p>Developed over 30 custom Slack slash commands including /auto_merge, /whynotmerge, /rebase, /mailgun, and /twilio, among others, facilitating seamless communication and task automation within the team.</p></li><li><p>Engineered a rebase button workflow, streamlining version control processes and enhancing developer efficiency.</p></li><li><p>Proficiently utilized a tech stack comprising Zend Framework 2-3, Apigility, Zend Expressive 1-3, PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, and CentOS to build robust and scalable applications, showcasing expertise across various technologies and platforms.</p></li>
+                          </ul>
+                        
+                      </div>
+                    
+                </div>
+              </article>
+            
+              <article>
+                <header>
+                  <h4>Subsplash</h4>
+                  <div class="meta"></div>
+                </header>
+                <div class="timeline">
+                  
+                      <div>
+                        <div>
+                          <h5>Web Developer</h5>
+                          <div class="meta">
+                            <div><time-duration><time datetime="2014-02-01">Feb 2014</time> – <time datetime="2016-01-01">Jan 2016</time></time-duration></div>
+                            
+                          </div>
+                        </div>
+                        <p>Turnkey apps/content management for churches &amp; non-profits</p>
+                        
+                          <ul>
+                            <li><p>Orchestrated the migration of payment processing systems to Stripe, spearheading the implementation and automation of a comprehensive customer sign-up and account creation process utilizing webhooks. Additionally, established analytics, reporting, and data processing functionalities to streamline financial operations.</p></li><li><p>Automated front-end process enhancements by developing gulp.js build scripts, incorporating features such as semantic sprites, LESS/CSS/JS minification, image optimization, and live reload, resulting in improved development efficiency and enhanced user experience.</p></li><li><p>Enhanced push notification functionality by parallelizing tasks using asynchronous workers and queues, significantly improving performance and scalability of the system.</p></li><li><p>Engineered a custom RSS/Atom parser for a reader project, enabling efficient parsing and organization of syndicated content for enhanced user engagement.</p></li><li><p>Built an in-house image manipulation library to automate previously error-prone and manual image processing and manipulation tasks, including primary color extraction, image montage creation, and promo widget generation, streamlining content creation processes, enhancing visual appeal and reducing toil</p></li>
+                          </ul>
+                        
+                      </div>
+                    
+                </div>
+              </article>
+            
+              <article>
+                <header>
+                  <h4>Kicksender</h4>
+                  <div class="meta"></div>
+                </header>
+                <div class="timeline">
+                  
+                      <div>
+                        <div>
+                          <h5>Founder</h5>
+                          <div class="meta">
+                            <div><time-duration><time datetime="2013-08-01">Aug 2013</time> – <time datetime="2014-08-01">Aug 2014</time></time-duration></div>
+                            
+                          </div>
+                        </div>
+                        <p>Digital Order Fulfillment for artists after their kickstarter project ends</p>
+                        
+                          <ul>
+                            <li><p>• Built it to offer digital fulfillment for crowd-funded projects, automating the pain of sending out lots of digital assets to lots of people reliably with a full set of features</p></li><li><p>• Built in Zend Framework 1 using PHP5-FPM 5.5, MySQL, HTML5, JS, AJAX, ZMQ, Vagrant, Nginx, Ubuntu</p></li>
+                          </ul>
+                        
+                      </div>
+                    
+                </div>
+              </article>
+            
+              <article>
+                <header>
+                  <h4>Tifah LLC</h4>
+                  <div class="meta"></div>
+                </header>
+                <div class="timeline">
+                  
+                      <div>
+                        <div>
+                          <h5>Co-Founder</h5>
+                          <div class="meta">
+                            <div><time-duration><time datetime="2005-03-01">Mar 2005</time> – <time datetime="2013-08-01">Aug 2013</time></time-duration></div>
+                            
+                          </div>
+                        </div>
+                        <p>Touring Musician</p>
+                        
+                          <ul>
+                            <li><p>• Implemented, managed, maintained Website/Marketing/Content Strategy</p></li><li><p>• Helped grow our email list from 0-60,000 with various marketing strategies</p></li><li><p>• Launched, built and maintained the system and server to facilitate giving away 226K albums in the span of a month (March, 2013)</p></li><li><p>• Built automated incentive system for users to tweet/like/send an email in exchange for a download</p></li><li><p>• Built logistical tool for tour management and ticket sales</p></li><li><p>• Built complete ticketing system, and date/show manager on top of Google Calendar and Stripe</p></li><li><p>• Built internal CRM tools to improve customer experience</p></li>
+                          </ul>
+                        
+                      </div>
+                    
+                </div>
+              </article>
+            
         </div>
-        <div>
-            <h4>Phone</h4>
-            303-304-9186
+      </section>
+      
+          
+        
+      <section id="publications">
+        <h3>Publications</h3>
+        <div class="stack">
+          
+              <article>
+                <header>
+                  <h4><a href="https://sandimetz.dpdcart.com/">99 Bottles of OOP (PHP Version)</a></h4>
+                  <div class="meta">
+                    <div>Published by <strong>https://sandimetz.com/99bottles</strong></div>
+                    <time datetime="2019">Jan 2019</time>
+                  </div>
+                </header>
+                <p>99 Bottles of OOP is a practical guide to writing cost-effective, maintainable, and pleasing object-oriented code.</p>
+              </article>
+            
         </div>
-    </div>
-</section>
-<section id="about">
-    <h3>About</h3>
-    <article>
-        <p>Technical leader with deep expertise in building and scaling payment systems, currently processing $2B+ annually. Proven track record of transforming legacy architectures into modern microservices while leading high-performing engineering teams. Known for reducing system complexity through elegant solutions and cultivating strong engineering cultures through mentorship. Brings unique perspective from founding successful digital ventures and navigating explosive growth phases.</p>
-    </article>
-</section>
-<section id="profiles">
-    <h3>Profiles</h3>
-    <div class="grid-list">
-        <div>
-            <h4>github</h4>
-            <a href="https://github.com/stringerbell">stringerbell</a>
+      </section>
+     
+      <section id="skills">
+        <h3>Skills</h3>
+        <div class="grid-list">
+          
+              <div>
+                <h4>Web Development</h4>
+                
+                  <ul class="tag-list">
+                    <li>git</li><li>Golang</li><li>Docker</li><li>Kubernetes</li><li>Javascript</li><li>React</li><li>PHP</li><li>Composer</li><li>PHPUnit</li><li>Behat/Gherkin</li><li>Swift</li><li>Redux</li><li>Statecharts</li><li>CSS</li>
+                  </ul>
+                
+              </div>
+            
+              <div>
+                <h4>APIs</h4>
+                
+                  <ul class="tag-list">
+                    <li>Stripe</li><li>AWS</li><li>Slack</li><li>Twilio</li><li>Mailgun</li><li>Twitter</li><li>Bitbucket</li><li>Jira</li><li>Github</li><li>ZMQ</li><li>RabbitMQ</li><li>Jenkins</li>
+                  </ul>
+                
+              </div>
+            
         </div>
-    </div>
-</section>
-
-<section id="work">
-    <h3>Work</h3>
-    <div class="stack">
-        <article>
-            <header>
-                <div class="spaced-list">
-                    <h4>Subsplash</h4>
-                    <span>
-                    <time datetime="2019-07-22">Jul 2019</time> –
-                    Present
-                  </span>
-                </div>
-                <div class="spaced-list">
-                    <strong>Staff Software Engineer (Technical Lead)</strong>
-                </div>
-            </header>
-            <p>Payments team</p>
-            <h5>Highlights</h5>
-            <ul>
-                <li>Led the payments team through explosive, COVID-fueled growth. Approximately 10x over two years. Now processing ~$2BB/year.</li>
-                <li>Led the project to integrate with Stripe Treasury resulting in increased revenue.</li>
-                <li>Part of an on-call rotation</li>
-                <li>Served as the Technical Lead for a dedicated team of 3-6 engineers, providing strategic guidance and technical oversight to ensure project success and team cohesion.</li>
-                <li>Provided mentorship and guidance to junior developers, imparting best practices and fostering skill development in writing valuable tests, simplifying logic, reducing conditionals, and addressing security vulnerabilities, thereby contributing to their professional growth and the overall success of the team.</li>
-                <li>Implemented many high-impact features to help increase revenue, and maintainability, and decrease fraud.</li>
-                <li>Migrated critical payment systems away from legacy PHP software to maintainable Golang microservices, with zero downtime.</li>
-                <li>Used metrics to streamline the customer signup process by leveraging Step Functions/FSM, which drastically reduced complexity, increased reliability, and improved observability, ultimately elevating the overall user experience.</li>
-            </ul>
-        </article>
-        <article>
-            <header>
-                <div class="spaced-list">
-                    <h4>i3logix</h4>
-                    <span>
-                    <time datetime="2016-01-04">Jan 2016</time> –
-                    <time datetime="2019-07-01">Jun 2019</time>
-                  </span>
-                </div>
-                <div class="spaced-list">
-                    <strong>Sr. Software Engineer (Team/Technical Lead)</strong>
-                </div>
-            </header>
-            <p>Mail-in ballot tracking, developer workflow automation.</p>
-            <h5>Highlights</h5>
-            <ul>
-                <li>Progressed from a Software Developer role to Software Engineer within six months, subsequently advancing to Senior Software Engineer, demonstrating consistent growth and contributions to the organization.</li>
-                <li>Led a team of three engineers for the development of Ballottrax, demonstrating leadership and project management skills in delivering successful outcomes.</li>
-                <li>Spearheaded the creation of a native iOS app using Swift 3 and 4, supplemented with React Native elements, showcasing versatility in mobile app development.</li>
-                <li>Simplified user interface complexity by implementing a Finite State Machine (FSM), resulting in improved usability and user experience.</li>
-                <li>Directed a project to automate developer workflows, streamline business processes, and integrate various services using Slack as a Command-Line Interface (CLI), akin to an internal IFTTT platform.</li>
-                <li>Developed over 30 custom Slack slash commands including /auto_merge, /whynotmerge, /rebase, /mailgun, and /twilio, among others, facilitating seamless communication and task automation within the team.</li>
-                <li>Engineered a rebase button workflow, streamlining version control processes and enhancing developer efficiency.</li>
-                <li>Proficiently utilized a tech stack comprising Zend Framework 2-3, Apigility, Zend Expressive 1-3, PHP 7+, Postgres, React, RabbitMQ, Vagrant, Apache, and CentOS to build robust and scalable applications, showcasing expertise across various technologies and platforms.</li>
-            </ul>
-        </article>
-        <article>
-            <header>
-                <div class="spaced-list">
-                    <h4>Subsplash</h4>
-                    <span>
-                    <time datetime="2014-02-01">Jan 2014</time> –
-                    <time datetime="2016-01-01">Dec 2015</time>
-                  </span>
-                </div>
-                <div class="spaced-list">
-                    <strong>Web Developer</strong>
-                </div>
-            </header>
-            <p>Turnkey apps/content management for churches &amp; non-profits</p>
-            <h5>Highlights</h5>
-            <ul>
-                <li>Orchestrated the migration of payment processing systems to Stripe, spearheading the implementation and automation of a comprehensive customer sign-up and account creation process utilizing webhooks. Additionally, established analytics, reporting, and data processing functionalities to streamline financial operations.</li>
-                <li>Automated front-end process enhancements by developing gulp.js build scripts, incorporating features such as semantic sprites, LESS/CSS/JS minification, image optimization, and live reload, resulting in improved development efficiency and enhanced user experience.</li>
-                <li>Enhanced push notification functionality by parallelizing tasks using asynchronous workers and queues, significantly improving performance and scalability of the system.</li>
-                <li>Engineered a custom RSS/Atom parser for a reader project, enabling efficient parsing and organization of syndicated content for enhanced user engagement.</li>
-                <li>Built an in-house image manipulation library to automate previously error-prone and manual image processing and manipulation tasks, including primary color extraction, image montage creation, and promo widget generation, streamlining content creation processes, enhancing visual appeal and reducing toil</li>
-            </ul>
-        </article>
-        <article>
-            <header>
-                <div class="spaced-list">
-                    <h4>Kicksender</h4>
-                    <span>
-                    <time datetime="2013-08-01">Jul 2013</time> –
-                    <time datetime="2014-08-01">Jul 2014</time>
-                  </span>
-                </div>
-                <div class="spaced-list">
-                    <strong>Founder</strong>
-                </div>
-            </header>
-            <p>Digital Order Fulfillment for artists after their kickstarter project ends</p>
-            <h5>Highlights</h5>
-            <ul>
-                <li>• Built it to offer digital fulfillment for crowd-funded projects, automating the pain of sending out lots of digital assets to lots of people reliably with a full set of features</li>
-                <li>• Built in Zend Framework 1 using PHP5-FPM 5.5, MySQL, HTML5, JS, AJAX, ZMQ, Vagrant, Nginx, Ubuntu</li>
-            </ul>
-        </article>
-        <article>
-            <header>
-                <div class="spaced-list">
-                    <h4>Tifah LLC</h4>
-                    <span>
-                    <time datetime="2005-03-01">Feb 2005</time> –
-                    <time datetime="2013-08-01">Jul 2013</time>
-                  </span>
-                </div>
-                <div class="spaced-list">
-                    <strong>Co-Founder</strong>
-                </div>
-            </header>
-            <p>Touring Musician</p>
-            <h5>Highlights</h5>
-            <ul>
-                <li>• Implemented, managed, maintained Website/Marketing/Content Strategy</li>
-                <li>• Helped grow our email list from 0-60,000 with various marketing strategies</li>
-                <li>• Launched, built and maintained the system and server to facilitate giving away 226K albums in the span of a month (March, 2013)</li>
-                <li>• Built automated incentive system for users to tweet/like/send an email in exchange for a download</li>
-                <li>• Built logistical tool for tour management and ticket sales</li>
-                <li>• Built complete ticketing system, and date/show manager on top of Google Calendar and Stripe</li>
-                <li>• Built internal CRM tools to improve customer experience</li>
-            </ul>
-        </article>
-    </div>
-</section>
-<section id="publications">
-    <h3>Publications</h3>
-    <div class="stack">
-        <article>
-            <header>
-                <div class="spaced-list">
-                    <h4>99 Bottles of OOP (PHP Version)</h4>
-                    <time datetime="2019">Dec 2018</time>
-                </div>
-                <div class="spaced-list">
-                    <span>
-                      Published by <strong>https://sandimetz.com/99bottles</strong>
-                    </span>
-                    <a href="https://sandimetz.dpdcart.com/">sandimetz.dpdcart.com</a>
-                </div>
-            </header>
-            <p>99 Bottles of OOP is a practical guide to writing cost-effective, maintainable, and pleasing object-oriented code.</p>
-        </article>
-    </div>
-</section>
-<section id="skills">
-    <h3>Skills</h3>
-    <div class="grid-list">
-        <div>
-            <h4>Web Development</h4>
-            <ul class="tag-list">
-                <li>git</li>
-                <li>Golang</li>
-                <li>Docker</li>
-                <li>Kubernetes</li>
-                <li>Javascript</li>
-                <li>React</li>
-                <li>PHP</li>
-                <li>Composer</li>
-                <li>PHPUnit</li>
-                <li>Behat/Gherkin</li>
-                <li>Swift</li>
-                <li>Redux</li>
-                <li>Statecharts</li>
-                <li>CSS</li>
-            </ul>
-        </div>
-        <div>
-            <h4>APIs</h4>
-            <ul class="tag-list">
-                <li>Stripe</li>
-                <li>AWS</li>
-                <li>Slack</li>
-                <li>Twilio</li>
-                <li>Mailgun</li>
-                <li>Twitter</li>
-                <li>Bitbucket</li>
-                <li>Jira</li>
-                <li>Github</li>
-                <li>ZMQ</li>
-                <li>RabbitMQ</li>
-                <li>Jenkins</li>
-            </ul>
-        </div>
-    </div>
-</section>
-</body>
-</html>
+      </section>
+     
+         
+      </body>
+    </html>
