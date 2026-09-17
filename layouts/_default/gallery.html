@@ -1,0 +1,40 @@
+{{ define "bodyclass" }}section type-{{ .File.ContentBaseName }}{{ end }}
+{{ define "main" }}
+{{ partial "page-header.html" . }}
+<div class='entry'>
+  <div class='container entry-content'>
+    {{ with .Content }}{{ . }}{{ end }}
+    <div class="gallery">
+      {{- $width := .Params.imageWidth | default 1200 }}
+      {{- $all := .Resources.ByType "image" }}
+      {{- $listed := slice }}
+      {{- $cards := slice }}
+      {{- range .Params.images }}
+        {{- $item := . }}{{ $file := .file }}
+        {{- with $.Resources.Get $file }}
+          {{- $cards = $cards | append (dict "img" . "caption" ($item.caption | default (path.BaseName $file | humanize))) }}
+          {{- $listed = $listed | append $file }}
+        {{- else }}
+          {{- warnf "gallery %s: image %q listed in front matter but not found in the bundle" $.File.Path $file }}
+        {{- end }}
+      {{- end }}
+      {{- range $all }}
+        {{- if not (in $listed (path.Base .Name)) }}
+          {{- $cards = $cards | append (dict "img" . "caption" (path.BaseName .Name | humanize)) }}
+        {{- end }}
+      {{- end }}
+      {{- range $cards }}
+      {{- $img := .img }}{{ $caption := .caption }}
+      {{- $thumb := $img }}{{ if gt $img.Width $width }}{{ $thumb = $img.Resize (printf "%dx" $width) }}{{ end }}
+      <div class="gallery-card">
+        <img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" loading="lazy" alt="{{ $caption }}" class="gallery-image">
+        <div class="gallery-info">
+          <h3 class="gallery-title"></h3>
+          <p class="gallery-description">{{ $caption }}</p>
+        </div>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</div>
+{{ end }}

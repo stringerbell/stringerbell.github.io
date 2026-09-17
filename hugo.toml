@@ -1,0 +1,49 @@
+baseURL = "https://dannstockton.com/"
+locale = "en-us"
+title = "Dann Stockton"
+copyright = "Dann Stockton"
+enableRobotsTXT = false
+disableKinds = ["taxonomy", "term"]
+
+[params]
+  description = "Dann Stockton's website"
+  accentColor = "#ffcd00"
+  logo = "/images/logo.png"
+  github = "stringerbell"
+  # Obfuscated on purpose; keep as-is unless you want a real mailto:
+  email = "dannstockton at the google owned e-mail site"
+  # How many posts show on the home page under "Recent Posts"
+  recentPosts = 10
+
+[menus]
+  [[menus.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menus.main]]
+    name = "About"
+    url = "/about/"
+    weight = 2
+
+[pagination]
+  pagerSize = 10
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true   # allow raw HTML inside markdown (the about page uses it)
+  [markup.highlight]
+    style = "monokai"
+    noClasses = true
+    lineNumbersInTable = false   # inline gutter: immune to the theme's table styling
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+  page = ["HTML"]
+
+[imaging.jpeg]
+  quality = 85
+
+[permalinks]
+  [permalinks.page]
+    posts = "/posts/:slug/"

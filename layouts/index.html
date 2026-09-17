@@ -1,0 +1,17 @@
+{{ define "bodyclass" }}home type-page{{ end }}
+{{ define "main" }}
+<div class='home-widgets'>
+  <div class='container sep-before'>{{ with .Content }}<section class='widget sep-after'>
+  <div class='entry-content'>{{ . }}</div>
+</section>{{ end }}<section class='widget widget-recent_posts sep-after'>
+  <header>
+    <h4 class='title widget-title'>Recent Posts</h4>
+  </header>
+  <ul class='list'>
+    {{ range first (.Site.Params.recentPosts | default 10) (where .Site.RegularPages "Section" "posts") }}{{ partial "list-item.html" . }}
+    {{ end }}
+  </ul>
+</section>
+</div>
+</div>
+{{ end }}

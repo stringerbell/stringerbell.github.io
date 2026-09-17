@@ -1,0 +1,30 @@
+{{ define "bodyclass" }}{{ if or (eq .Layout "page") (not .Section) }}section type-{{ .File.ContentBaseName }}{{ else }}page type-{{ .Section }}{{ end }}{{ end }}
+{{ define "main" }}
+{{- if or (eq .Layout "page") (not .Section) }}
+{{ partial "page-header.html" . }}
+<div class='entry'>
+  <div class='container entry-content'>
+  {{ .Content }}
+</div>
+</div>
+{{- else }}
+<article lang='{{ .Site.Language.Lang }}' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>{{ .Title }}</h1>
+    </div>
+    {{ partial "entry-meta.html" . }}
+  </div>
+</header>
+  <div class='container entry-content'>
+{{ .Content }}
+</div>
+<footer class='entry-footer'>
+  <div class='container sep-before'>
+  </div>
+</footer>
+</article>
+{{ partial "entry-nav.html" . }}
+{{- end }}
+{{ end }}

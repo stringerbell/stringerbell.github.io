@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang='{{ .Site.Language.Lang }}'><head>
+  {{ partial "head.html" . }}
+</head>
+<body class='{{ block "bodyclass" . }}page type-{{ with .Section }}{{ . }}{{ else }}page{{ end }}{{ end }} has-sidebar'>
+  <div class='site'>{{ partial "sidebar.html" . }}<div class='main'>{{ partial "main-menu.html" . }}<div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'>{{ if .IsHome }}<h1 class='site-title title'>{{ .Site.Title }}</h1>{{ else }}<p class='site-title title'>{{ .Site.Title }}</p>{{ end }}<p class='desc site-desc'>{{ .Site.Params.description }}</p>
+          </div>
+        </div>
+      </header>
+      <main id='content'>
+{{ block "main" . }}{{ end }}
+      </main>
+      {{ partial "footer.html" . }}
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+<script src='/assets/js/main.69694257.js'></script><script src='/js/custom.js'></script>
+</body>
+</html>

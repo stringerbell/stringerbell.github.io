@@ -1,0 +1,10 @@
+<section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+    <ul>{{ with .Site.Params.github }}<li>
+        <a href='https://github.com/{{ . }}' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Open Github account in new tab</span>{{ partial "icons/github.html" }}</a>
+      </li>{{ end }}{{ with .Site.Params.email }}<li>
+        <a href='mailto:{{ replace . " " "%20" }}' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Contact via Email</span>{{ partial "icons/email.html" }}</a>
+      </li>{{ end }}</ul>
+  </nav>
+</section>

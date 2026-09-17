@@ -1,0 +1,26 @@
+<div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    {{ with .Site.Params.logo }}
+    <div class='logo'>
+      <a href='/'>
+        <img src='{{ . }}'>
+      </a>
+    </div>
+    {{ end }}
+    <h2 class='title site-title '>
+      <a href='/'>
+      {{ .Site.Title }}
+      </a>
+    </h2>
+    <div class='desc'>
+    {{ .Site.Params.description }}
+    </div>
+  </header>
+
+</section>
+{{ partial "social-menu.html" . }}</div>
+  <div class='sidebar-overlay'></div>
+</div>

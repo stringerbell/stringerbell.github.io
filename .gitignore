@@ -1,0 +1,7 @@
+# hugo build output + caches
+/public/
+/resources/_gen/
+.hugo_build.lock
+# node (resume rendering)
+node_modules/
+.DS_Store

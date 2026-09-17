@@ -1,0 +1,19 @@
+{{ define "bodyclass" }}section type-{{ .Section }}{{ end }}
+{{ define "main" }}
+{{ partial "page-header.html" . }}
+{{ with .Content }}<div class='entry'>
+  <div class='container entry-content'>
+  {{ . }}
+</div>
+</div>{{ end }}
+{{ $pages := .Paginate .RegularPages }}
+<div class='container list-container'>
+  <ul class='list'>
+      {{ range $pages.Pages }}{{ partial "list-item.html" . }}
+      {{ end }}
+  </ul>
+</div>
+{{ if gt $pages.TotalPages 1 }}<nav class='pagination'>
+  <div class='container'>{{ with $pages.Prev }}<a class='prev' href='{{ .URL }}'>{{ partial "icons/arrow-left.html" }} Newer</a>{{ end }}{{ with $pages.Next }}<a class='next' href='{{ .URL }}'>Older {{ partial "icons/arrow-right.html" }}</a>{{ end }}</div>
+</nav>{{ end }}
+{{ end }}

@@ -1,0 +1,13 @@
+<nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Skip to Content</a>
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Toggle Sidebar</span>
+  <span class='open'>{{ partial "icons/menu.html" }}</span>
+  <span class='close'>{{ partial "icons/close.html" }}</span>
+</button>
+    <ul>{{ $p := . }}{{ range .Site.Menus.main }}{{ $current := or ($p.IsMenuCurrent "main" .) ($p.HasMenuCurrent "main" .) (eq $p.RelPermalink .URL) }}<li class='item{{ if $current }} current{{ end }}'>
+        <a {{ if $current }}aria-current='page' {{ end }}href='{{ .URL }}'>{{ .Name }}</a>
+      </li>{{ end }}</ul>
+  </div>
+</nav>

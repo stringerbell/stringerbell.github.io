@@ -1,0 +1,12 @@
+{{ if or .PrevInSection .NextInSection }}<nav class='entry-nav'>
+  <div class='container'>{{ with .PrevInSection }}<div class='prev-entry sep-before'>
+      <a href='{{ .RelPermalink }}'>
+        <span aria-hidden='true'>{{ partial "icons/arrow-left.html" }} Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>{{ .Title }}</a>
+    </div>{{ end }}{{ with .NextInSection }}<div class='next-entry sep-before'>
+      <a href='{{ .RelPermalink }}'>
+        <span class='screen-reader-text'>Next post: </span>{{ .Title }}
+        <span aria-hidden='true'>Next {{ partial "icons/arrow-right.html" }}</span>
+      </a>
+    </div>{{ end }}</div>
+</nav>{{ end }}

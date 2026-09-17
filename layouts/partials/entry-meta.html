@@ -1,0 +1,9 @@
+<div class='entry-meta'>
+  <span class='posted-on'>{{ partial "icons/calendar.html" }}
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}'>{{ .Date.Format "Jan 2, 2006" }}</time>
+</span>
+<span class='reading-time'>{{ partial "icons/clock.html" }}
+{{ if eq .ReadingTime 1 }}One min read{{ else }}{{ .ReadingTime }} mins read{{ end }}
+</span>
+</div>
