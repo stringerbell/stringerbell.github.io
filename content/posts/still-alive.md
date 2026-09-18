@@ -12,9 +12,9 @@ I have a bad habit of making a thing, and then never telling anyone about it. A 
 
 ## Games
 
-- **[Armageddon](/armageddon/)** — (Made with older kiddo) A first-person shooter about surviving the apocalypse and rebuilding society.
+- **[Armageddon](https://abes-games.com)** — (Made with older kiddo) A first-person shooter about surviving the apocalypse and rebuilding society.
   Works with a Switch Pro Controller. 
-  {{< figure src="/images/still-alive/armageddon.jpg" link="/armageddon/" alt="Armageddon title screen" >}}
+  {{< figure src="/images/still-alive/armageddon.jpg" link="https://abes-games.com" alt="Armageddon title screen" >}}
 - **[Limited Gravity](/limited-gravity/)** — (Made with younger kiddo) You are an alien. Space is yours to explore. Humans want you dead, other
   aliens want your help, and the missions that pay best are the ones most likely to kill you. 
   {{< figure src="/images/still-alive/limited-gravity.jpg" link="/limited-gravity/" alt="Limited Gravity alien creator" >}}
